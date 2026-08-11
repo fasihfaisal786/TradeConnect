@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Book Tradesman — TradeConnect</title>
+<link rel="stylesheet" href="common.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+.page{max-width:900px;margin:32px auto;padding:0 20px;display:grid;grid-template-columns:1fr 300px;gap:22px;}
+@media(max-width:700px){.page{grid-template-columns:1fr;}}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn-full{background:var(--green);color:#000;border:none;width:100%;padding:14px;border-radius:10px;font-weight:700;font-size:1rem;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;margin-top:8px;}
+.btn-full:hover{background:var(--green-dark);}
+.ts-head{background:linear-gradient(135deg,#0a0a0a,#111);border:1px solid var(--border);border-radius:14px;padding:22px;text-align:center;margin-bottom:16px;}
+.ts-av{width:60px;height:60px;border-radius:14px;background:#0d1f14;border:1px solid #1a3a24;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;color:var(--green);margin:0 auto 10px;}
+.ts-head h4{font-weight:700;color:#fff;margin-bottom:6px;font-size:1rem;}
+.trade-tag{background:#0d1f14;color:var(--green);border:1px solid #1a3a24;padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:600;}
+.sum-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border2);font-size:.88rem;}
+.sum-row:last-child{border:none;}
+.sum-row span:first-child{color:var(--muted);}
+.sum-row span:last-child{font-weight:700;color:#fff;}
+.total-box{background:#0d1f14;border:1px solid #1a3a24;border-radius:12px;padding:16px;text-align:center;margin-top:14px;}
+.total-box .lbl{font-size:.78rem;color:var(--green);margin-bottom:4px;}
+.total-box .amt{font-size:1.8rem;font-weight:900;color:#fff;letter-spacing:-1px;}
+</style>
+</head><body>
+<nav class="navbar">
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L26 26" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><path d="M26 4L4 26" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><circle cx="4" cy="4" r="3" fill="#3bcc6e"/><circle cx="26" cy="4" r="3" fill="#3bcc6e"/><circle cx="4" cy="26" r="3" fill="#3bcc6e"/><circle cx="26" cy="26" r="3" fill="#3bcc6e"/></svg><span style="font-family:Inter,sans-serif;font-size:1.25rem;font-weight:800;color:#fff;letter-spacing:-.3px;">Trade <span style="color:#3bcc6e;">Connect</span></span></span></a>
+  <a href="search.html" style="color:var(--muted);font-size:.88rem;"><i class="fas fa-arrow-left" style="margin-right:6px"></i>Back to Search</a>
+</nav>
+<div class="page">
+  <div class="card">
+    <h2 style="font-weight:800;font-size:1.5rem;color:#fff;margin-bottom:5px;">Book a Tradesman</h2>
+    <p style="color:var(--muted);margin-bottom:22px;font-size:.88rem;">Fill in your details and we'll confirm your booking</p>
+    <div class="alert alert-error" id="errBox"></div>
+    <form action="api/booking.php" method="POST" onsubmit="return validate()">
+      <input type="hidden" name="tradesman_id" id="tid" value="1">
+      <input type="hidden" name="city" id="tcity" value="Karachi">
+      <div class="form-group"><label><i class="fas fa-user" style="color:var(--green);margin-right:5px"></i>Your Full Name</label><input type="text" name="client_name" placeholder="Muhammad Fasih" required></div>
+      <div class="form-group"><label><i class="fas fa-phone" style="color:var(--green);margin-right:5px"></i>Phone Number</label><input type="text" name="phone" placeholder="03XX-XXXXXXX" required></div>
+      <div class="form-group"><label><i class="fas fa-map-marker-alt" style="color:var(--green);margin-right:5px"></i>Full Address</label><textarea name="address" rows="2" placeholder="House #, Street, Area, City" required></textarea></div>
+      <div class="two-col">
+        <div class="form-group"><label><i class="fas fa-calendar" style="color:var(--green);margin-right:5px"></i>Booking Date</label><input type="date" name="booking_date" id="dateF" required></div>
+        <div class="form-group"><label><i class="fas fa-clock" style="color:var(--green);margin-right:5px"></i>Time</label>
+          <select name="booking_time">
+            <option value="08:00">08:00 AM</option><option value="09:00">09:00 AM</option><option value="10:00">10:00 AM</option>
+            <option value="11:00">11:00 AM</option><option value="12:00">12:00 PM</option><option value="13:00">01:00 PM</option>
+            <option value="14:00">02:00 PM</option><option value="15:00">03:00 PM</option><option value="16:00">04:00 PM</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label><i class="fas fa-tools" style="color:var(--green);margin-right:5px"></i>Service Type</label>
+        <select name="service_type" id="svcSel" onchange="updateSvc()">
+          <option value="plumber">🔧 Plumbing Work</option><option value="electrician">⚡ Electrical Work</option>
+          <option value="carpenter">🪚 Carpentry Work</option><option value="painter">🎨 Painting Work</option>
+        </select>
+      </div>
+      <div class="form-group"><label><i class="fas fa-comment" style="color:var(--green);margin-right:5px"></i>Job Description</label><textarea name="description" rows="3" placeholder="Describe the work needed in detail..." required></textarea></div>
+      <div class="form-group"><label><i class="fas fa-hourglass-half" style="color:var(--green);margin-right:5px"></i>Estimated Hours</label>
+        <select name="hours" id="hrs" onchange="updateTotal()">
+          <option value="1">1 hour</option><option value="2">2 hours</option><option value="3">3 hours</option>
+          <option value="4">4 hours</option><option value="8">Full Day (8 hrs)</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-full"><i class="fas fa-calendar-check" style="margin-right:8px"></i>Confirm Booking</button>
+    </form>
+  </div>
+  <div>
+    <div class="ts-head">
+      <div class="ts-av" id="tsAv">AK</div>
+      <h4 id="tsName">Ahmed Khan</h4>
+      <span class="trade-tag" id="tsTrade">⚡ Electrician</span>
+      <div style="margin-top:10px;"><span class="stars" id="tsStars">★★★★★ 0.0</span></div>
+      <div style="color:var(--muted);font-size:.8rem;margin-top:4px"><i class="fas fa-map-marker-alt" style="color:var(--green);margin-right:4px"></i><span id="tsCity">Karachi</span></div>
+    </div>
+    <div class="card">
+      <div style="font-weight:700;color:#fff;margin-bottom:14px;">Booking Summary</div>
+      <div class="sum-row"><span>Hourly Rate</span><span id="sumRate">Rs. 500/hr</span></div>
+      <div class="sum-row"><span>Hours</span><span id="sumHrs">1 hour</span></div>
+      <div class="sum-row"><span>Service</span><span id="sumSvc">Electrical</span></div>
+      <div class="total-box">
+        <div class="lbl">Estimated Total</div>
+        <div class="amt" id="sumAmt">Rs. 500</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:4px">+ applicable taxes</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const labels={plumber:"🔧 Plumber",electrician:"⚡ Electrician",carpenter:"🪚 Carpenter",painter:"🎨 Painter",other:"🔨 Other"};
+let currentRate = 500;
+
+function getInitials(name){
+  return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+}
+
+function updateTotal(){
+  const h=parseInt(document.getElementById('hrs').value);
+  document.getElementById('sumHrs').textContent=h+(h===1?' hour':' hours');
+  document.getElementById('sumAmt').textContent='Rs. '+(h*currentRate).toLocaleString();
+}
+
+function updateSvc(){
+  document.getElementById('sumSvc').textContent=
+    document.getElementById('svcSel').options[document.getElementById('svcSel').selectedIndex].text;
+}
+
+function validate(){
+  if(!document.getElementById('dateF').value){alert('Please select a date!');return false;}
+  return true;
+}
+
+// Real DB se tradesman load karo
+async function loadTradesman(){
+  const p   = new URLSearchParams(location.search);
+  const tid = parseInt(p.get('id')) || 1;
+
+  try{
+    const res  = await fetch('api/get_tradesman_by_id.php?id='+tid);
+    const json = await res.json();
+
+    if(!json.ok){
+      document.querySelector('.card h2').textContent='Tradesman not found!';
+      return;
+    }
+
+    const t = json.tradesman;
+    currentRate = parseFloat(t.hourly_rate);
+
+    // Form hidden fields
+    document.getElementById('tid').value   = t.id;
+    document.getElementById('tcity').value = t.city || 'Karachi';
+
+    // Sidebar tradesman info
+    document.getElementById('tsAv').textContent   = getInitials(t.name);
+    document.getElementById('tsName').textContent = t.name;
+    document.getElementById('tsTrade').textContent= labels[t.trade_category]||t.trade_category;
+    document.getElementById('tsCity').textContent = t.city||'—';
+
+    // Stars
+    const r = parseFloat(t.rating_avg||0);
+    const stars = r>=5?'★★★★★':r>=4.5?'★★★★½':r>=4?'★★★★☆':'★★★☆☆';
+    document.getElementById('tsStars').textContent = stars+' '+r.toFixed(1);
+
+    // Summary
+    document.getElementById('sumRate').textContent = 'Rs. '+currentRate.toLocaleString()+'/hr';
+    updateTotal();
+
+    // Service type default to tradesman's trade
+    const svcSel = document.getElementById('svcSel');
+    for(let i=0;i<svcSel.options.length;i++){
+      if(svcSel.options[i].value===t.trade_category){
+        svcSel.selectedIndex=i; break;
+      }
+    }
+    updateSvc();
+
+  }catch(e){
+    console.error('Error loading tradesman:',e);
+  }
+}
+
+// Login check
+async function checkLogin(){
+  try{
+    const res  = await fetch('api/get_session.php');
+    const json = await res.json();
+    if(!json.ok){
+      // Replace entire form with login required message
+      document.querySelector('.card').innerHTML = `
+        <div style="text-align:center;padding:30px 10px;">
+          <div style="width:64px;height:64px;border-radius:50%;background:#0d1f14;border:2px solid #1a3a24;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem;">🔒</div>
+          <h2 style="font-weight:800;font-size:1.5rem;color:#fff;margin-bottom:10px;">Login Required</h2>
+          <p style="color:#888;font-size:.95rem;line-height:1.7;margin-bottom:28px;max-width:340px;margin-left:auto;margin-right:auto;">
+            You must be logged in to book a tradesman.<br>Please login or create a free account to continue.
+          </p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+            <a href="login.html" style="background:#3bcc6e;color:#000;padding:13px 30px;border-radius:9px;font-weight:700;text-decoration:none;font-size:.95rem;">Login Now</a>
+            <a href="register.html" style="background:transparent;border:1px solid #2a2a2a;color:#fff;padding:13px 24px;border-radius:9px;font-weight:600;text-decoration:none;font-size:.95rem;">Register Free</a>
+          </div>
+        </div>
+      `;
+    }
+  }catch(e){}
+}
+
+// Date setup - koi limit nahi
+document.getElementById('dateF').value = new Date().toISOString().split('T')[0];
+
+// Error show
+const urlP=new URLSearchParams(location.search);
+if(urlP.get('error')){
+  const b=document.getElementById('errBox');
+  b.textContent='⚠️ '+decodeURIComponent(urlP.get('error').replace(/\+/g,' '));
+  b.classList.add('show');
+}
+
+checkLogin();
+loadTradesman();
+</script>
+</body></html>

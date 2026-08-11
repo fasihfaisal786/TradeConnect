@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeConnect — Pakistan's Trusted Trades Platform</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="common.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --green:#3bcc6e;
+  --green-dark:#2aaa58;
+  --black:#000000;
+  --dark:#0a0a0a;
+  --card:#111111;
+  --border:#1e1e1e;
+  --text:#ffffff;
+  --muted:#888888;
+  --light:#cccccc;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:#080808;color:var(--text);overflow-x:hidden;}
+/* Page-wide green glow shadow on sides */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:9999;
+  box-shadow:inset 0 0 120px rgba(59,204,110,.04), inset 80px 0 160px rgba(59,204,110,.03), inset -80px 0 160px rgba(59,204,110,.03);
+}
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:#000;}
+::-webkit-scrollbar-thumb{background:#1e1e1e;border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:#3bcc6e;}
+
+/* ─── NAVBAR OVERRIDE ─── */
+.navbar{
+  position:fixed!important;top:0;left:0;right:0;z-index:1000;
+  background:rgba(0,0,0,.95)!important;
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid #1e1e1e;
+  height:68px;
+  padding:0!important;
+}
+.nav-wrap{
+  width:100%;max-width:1280px;margin:0 auto;padding:0 32px;
+  height:68px;display:flex!important;align-items:center;
+  justify-content:space-between!important;
+  flex-direction:row!important;
+}
+/* Logo — hard left */
+.logo{
+  display:flex!important;align-items:center;gap:10px;
+  text-decoration:none;flex-shrink:0;
+  margin-right:auto;
+}
+/* All links + buttons — hard right */
+.nav-right-group{
+  display:flex!important;align-items:center;
+  gap:2px;flex-shrink:0;margin-left:auto;
+}
+.nav-right-group a{
+  color:#888;text-decoration:none;font-size:.875rem;
+  font-weight:500;padding:8px 12px;border-radius:6px;
+  transition:.2s;white-space:nowrap;display:inline-block;
+}
+.nav-right-group a:hover{color:#fff;background:#111;}
+.nav-right-group a.active{color:#fff;}
+.nav-divider{width:1px;height:22px;background:#222;margin:0 8px;flex-shrink:0;}
+.btn-ghost{
+  border:1px solid #333!important;color:#fff!important;
+  background:transparent!important;padding:8px 18px!important;
+  border-radius:8px!important;font-weight:600!important;
+}
+.btn-ghost:hover{border-color:#555!important;background:#111!important;}
+.btn-green-nav{
+  background:#3bcc6e!important;color:#000!important;
+  padding:9px 20px!important;border-radius:8px!important;
+  font-weight:700!important;margin-left:4px;
+}
+.btn-green-nav:hover{background:#2aaa58!important;}
+@media(max-width:768px){
+  .nav-right-group a:not(.btn-ghost):not(.btn-green-nav){display:none!important;}
+}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;
+  display:flex;align-items:center;
+  padding:120px 28px 80px;
+  background:var(--black);
+  position:relative;overflow:hidden;
+}
+.hero-glow{
+  position:absolute;top:10%;left:50%;transform:translateX(-50%);
+  width:900px;height:500px;
+  background:radial-gradient(ellipse,rgba(59,204,110,.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-inner{max-width:1280px;margin:auto;width:100%;position:relative;z-index:1;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#0d1f14;border:1px solid #1a3a24;
+  color:var(--green);padding:8px 18px;border-radius:40px;
+  font-size:.78rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;
+  margin-bottom:32px;
+}
+.hero-badge span{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.hero h1{
+  font-size:clamp(2.8rem,6vw,5rem);font-weight:900;
+  line-height:1.08;letter-spacing:-2px;
+  max-width:800px;margin-bottom:24px;
+}
+.hero h1 .green{color:var(--green);}
+.hero h1 .outline{
+  -webkit-text-stroke:1px rgba(255,255,255,.3);
+  color:transparent;
+}
+.hero-sub{
+  color:var(--muted);font-size:1.05rem;
+  max-width:520px;line-height:1.75;margin-bottom:48px;font-weight:400;
+}
+
+/* search */
+.search-wrap{
+  display:flex;gap:0;max-width:660px;
+  background:#111;border:1px solid #2a2a2a;
+  border-radius:12px;overflow:hidden;margin-bottom:36px;
+}
+.search-wrap select,.search-wrap input{
+  background:transparent;border:none;outline:none;
+  padding:16px 20px;font-family:'Inter',sans-serif;font-size:.9rem;color:#fff;
+}
+.search-wrap select{
+  border-right:1px solid #2a2a2a;min-width:180px;cursor:pointer;
+  font-weight:500;
+}
+.search-wrap select option{background:#111;}
+.search-wrap input{flex:1;}
+.search-wrap input::placeholder{color:var(--muted);}
+.btn-search{
+  background:var(--green);color:#000;border:none;
+  padding:16px 28px;font-weight:700;font-size:.9rem;
+  cursor:pointer;white-space:nowrap;transition:.2s;
+  display:flex;align-items:center;gap:8px;
+}
+.btn-search:hover{background:var(--green-dark);}
+.hero-trust{display:flex;gap:28px;flex-wrap:wrap;}
+.trust-item{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);}
+.trust-item i{color:var(--green);}
+
+/* ─── STATS ─── */
+.stats-section{background:#080808;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:0;}
+.stats-grid{max-width:1280px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);}
+.stat-block{
+  padding:44px 28px;text-align:center;
+  border-right:1px solid var(--border);
+  position:relative;
+}
+.stat-block:last-child{border:none;}
+.stat-block h3{font-size:3rem;font-weight:900;letter-spacing:-2px;color:#fff;margin-bottom:6px;}
+.stat-block h3 span{color:var(--green);}
+.stat-block p{color:var(--muted);font-size:.8rem;font-weight:500;text-transform:uppercase;letter-spacing:1px;}
+
+/* ─── SECTIONS ─── */
+.section{padding:88px 28px;}
+.s-inner{max-width:1280px;margin:auto;}
+.s-head{text-align:center;margin-bottom:60px;}
+.s-tag{
+  display:inline-block;
+  background:#0d1f14;border:1px solid #1a3a24;color:var(--green);
+  padding:6px 16px;border-radius:40px;font-size:.72rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;
+}
+.s-head h2{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;letter-spacing:-1px;margin-bottom:14px;}
+.s-head p{color:var(--muted);font-size:.95rem;max-width:500px;margin:auto;line-height:1.7;}
+.bg-dark-alt{background:#060606;}
+
+/* ─── CATEGORY CARDS ─── */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);}
+.cat-card{
+  background:var(--dark);padding:36px 24px;text-align:center;
+  cursor:pointer;transition:.25s;position:relative;overflow:hidden;
+}
+.cat-card::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--green);transform:scaleX(0);transition:.25s;
+}
+.cat-card:hover{background:#0f0f0f;}
+.cat-card:hover::before{transform:scaleX(1);}
+.cat-ic{
+  width:64px;height:64px;border-radius:16px;
+  background:#111;border:1px solid #1e1e1e;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;margin:0 auto 18px;transition:.25s;
+  color:var(--green);
+}
+.cat-card:hover .cat-ic{background:#0d1f14;border-color:#1a3a24;}
+.cat-card h5{font-size:.95rem;font-weight:700;margin-bottom:6px;}
+.cat-card small{color:var(--muted);font-size:.78rem;}
+.cat-card .num{
+  margin-top:12px;font-size:.75rem;font-weight:700;
+  color:var(--green);letter-spacing:.3px;
+}
+
+/* ─── TRADESMAN CARDS ─── */
+.tc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1px;background:var(--border);}
+.tc-card{background:var(--dark);padding:28px;transition:.25s;position:relative;}
+.tc-card:hover{background:#0f0f0f;}
+.tc-head{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+.tc-avatar{
+  width:54px;height:54px;border-radius:12px;
+  background:#0d1f14;border:1px solid #1a3a24;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;font-weight:800;color:var(--green);flex-shrink:0;
+}
+.tc-name{font-size:1rem;font-weight:700;margin-bottom:5px;}
+.tc-trade{
+  background:#0d1f14;color:var(--green);border:1px solid #1a3a24;
+  padding:3px 10px;border-radius:5px;font-size:.72rem;font-weight:600;
+  display:inline-block;
+}
+.tc-stars{color:var(--green);font-size:.85rem;margin-bottom:4px;}
+.tc-price{
+  margin-left:auto;text-align:right;
+}
+.tc-price .amount{font-size:1.2rem;font-weight:800;color:#fff;}
+.tc-price small{color:var(--muted);font-size:.72rem;display:block;}
+.tc-desc{color:var(--muted);font-size:.85rem;line-height:1.65;margin-bottom:16px;}
+.tc-meta-row{display:flex;gap:16px;margin-bottom:20px;}
+.tc-meta-row span{font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:5px;}
+.tc-meta-row i{color:var(--green);font-size:.8rem;}
+.verified-tag{
+  display:inline-flex;align-items:center;gap:4px;
+  background:#0d1f14;color:var(--green);border:1px solid #1a3a24;
+  font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:4px;
+  margin-left:8px;
+}
+.btn-book{
+  display:block;width:100%;padding:12px;
+  background:var(--green);color:#000;
+  border:none;border-radius:8px;font-weight:700;font-size:.88rem;
+  cursor:pointer;transition:.2s;text-decoration:none;text-align:center;
+}
+.btn-book:hover{background:var(--green-dark);}
+.btn-outline{
+  display:block;width:100%;padding:11px;
+  background:transparent;color:#fff;
+  border:1px solid #2a2a2a;border-radius:8px;font-weight:600;font-size:.88rem;
+  cursor:pointer;transition:.2s;text-decoration:none;text-align:center;
+  margin-top:8px;
+}
+.btn-outline:hover{border-color:#444;background:#111;}
+
+/* ─── HOW IT WORKS ─── */
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--border);}
+.how-card{background:var(--dark);padding:40px 28px;position:relative;}
+.step-num{
+  font-size:4rem;font-weight:900;letter-spacing:-2px;
+  color:#1a1a1a;margin-bottom:16px;line-height:1;
+}
+.how-card h5{font-size:1rem;font-weight:700;margin-bottom:10px;}
+.how-card p{color:var(--muted);font-size:.87rem;line-height:1.65;}
+.how-card .step-icon{
+  width:44px;height:44px;border-radius:10px;
+  background:#0d1f14;border:1px solid #1a3a24;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--green);font-size:1rem;margin-bottom:20px;
+}
+
+/* ─── WHY US ─── */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.why-card{background:var(--dark);padding:32px 28px;}
+@media(max-width:768px){.why-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.why-grid{grid-template-columns:1fr;}}
+.why-icon{
+  width:48px;height:48px;border-radius:10px;
+  background:#0d1f14;border:1px solid #1a3a24;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--green);font-size:1.1rem;margin-bottom:16px;
+}
+.why-card h5{font-size:.95rem;font-weight:700;margin-bottom:10px;}
+.why-card p{color:var(--muted);font-size:.85rem;line-height:1.65;}
+
+/* ─── CTA BANNER ─── */
+.cta-banner{
+  margin:0 28px;border-radius:16px;
+  background:#0d1f14;border:1px solid #1a3a24;
+  padding:72px 48px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-banner::before{
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:600px;height:300px;
+  background:radial-gradient(ellipse,rgba(59,204,110,.08),transparent 70%);
+  pointer-events:none;
+}
+.cta-banner h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;letter-spacing:-1px;margin-bottom:14px;}
+.cta-banner p{color:var(--muted);margin-bottom:32px;font-size:.95rem;}
+.btn-green-lg{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--green);color:#000;
+  padding:14px 36px;border-radius:10px;font-weight:700;font-size:.95rem;
+  text-decoration:none;transition:.2s;border:none;cursor:pointer;
+}
+.btn-green-lg:hover{background:var(--green-dark);}
+
+/* ─── FOOTER ─── */
+footer{
+  margin-top:88px;
+  border-top:1px solid var(--border);
+  padding:64px 28px 0;
+  background:var(--dark);
+}
+.footer-wrap{max-width:1280px;margin:auto;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid var(--border);}
+.footer-brand p{color:var(--muted);font-size:.85rem;line-height:1.75;margin-top:14px;max-width:260px;}
+.footer-social{display:flex;gap:8px;margin-top:20px;}
+.soc-btn{
+  width:36px;height:36px;border-radius:8px;
+  background:#111;border:1px solid #1e1e1e;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:.85rem;text-decoration:none;transition:.2s;
+}
+.soc-btn:hover{border-color:var(--green);color:var(--green);}
+.footer-col h6{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:18px;}
+.footer-col a{display:block;color:#555;text-decoration:none;font-size:.85rem;margin-bottom:11px;transition:.2s;}
+.footer-col a:hover{color:var(--green);}
+.footer-bottom{
+  padding:22px 0;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:10px;
+}
+.footer-bottom p{color:#333;font-size:.78rem;}
+.footer-bottom a{color:#333;text-decoration:none;}
+.footer-bottom a:hover{color:var(--green);}
+
+/* ─── VIEW ALL BTN ─── */
+.view-all-wrap{text-align:center;margin-top:48px;}
+.btn-view-all{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid #2a2a2a;color:#fff;
+  padding:12px 32px;border-radius:8px;font-weight:600;font-size:.88rem;
+  text-decoration:none;transition:.2s;background:transparent;cursor:pointer;
+}
+.btn-view-all:hover{border-color:var(--green);color:var(--green);}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .footer-top{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .footer-top{grid-template-columns:1fr;}
+  .nav-links a:not(.btn-ghost):not(.btn-green){display:none;}
+  .search-wrap{flex-direction:column;border-radius:12px;}
+  .search-wrap select{border-right:none;border-bottom:1px solid #2a2a2a;}
+  .cta-banner{margin:0 16px;padding:48px 24px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-wrap">
+    <!-- LOGO — exact same as search page -->
+    <a href="index.html" class="logo">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L26 26" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><path d="M26 4L4 26" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><circle cx="4" cy="4" r="3" fill="#3bcc6e"/><circle cx="26" cy="4" r="3" fill="#3bcc6e"/><circle cx="4" cy="26" r="3" fill="#3bcc6e"/><circle cx="26" cy="26" r="3" fill="#3bcc6e"/></svg><span style="font-family:Inter,sans-serif;font-size:1.25rem;font-weight:800;color:#fff;letter-spacing:-.3px;">Trade <span style="color:#3bcc6e;">Connect</span></span></span>
+    </a>
+    <!-- LINKS + BUTTONS — bilkul right -->
+    <div class="nav-right-group">
+      <a href="index.html" class="active">Home</a>
+      <a href="search.html">Find Tradesmen</a>
+      <a href="#how">How It Works</a>
+      <a href="#about">About</a>
+      <div class="nav-divider"></div>
+      <a href="login.html" class="btn-ghost">Login</a>
+      <a href="register.html" class="btn-green-nav">Register Free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span></span> Pakistan's #1 Verified Trades Platform
+    </div>
+    <h1>
+      Find <span class="green">Skilled</span><br>
+      Tradesmen <span class="outline">Near You</span>
+    </h1>
+    <p class="hero-sub">Connect with verified plumbers, electricians, carpenters & painters across Pakistan. Real reviews. Transparent rates. Instant booking.</p>
+
+    <div class="search-wrap">
+      <select id="svcSel">
+        <option value="">All Services</option>
+        <option value="plumber">🔧 Plumber</option>
+        <option value="electrician">⚡ Electrician</option>
+        <option value="carpenter">🪚 Carpenter</option>
+        <option value="painter">🎨 Painter</option>
+      </select>
+      <input type="text" id="cityIn" placeholder="Enter your city — e.g. Karachi, Lahore">
+      <button class="btn-search" onclick="goSearch()"><i class="fas fa-search"></i> Search</button>
+    </div>
+
+    <div class="hero-trust">
+      <div class="trust-item"><i class="fas fa-check-circle"></i> All tradesmen verified</div>
+      <div class="trust-item"><i class="fas fa-star"></i> Rated by real clients</div>
+      <div class="trust-item"><i class="fas fa-lock"></i> Secure & easy booking</div>
+      <div class="trust-item"><i class="fas fa-headset"></i> 7-day support</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-block"><h3 id="c1">0<span>+</span></h3><p>Tradesmen Registered</p></div>
+    <div class="stat-block"><h3 id="c2">0<span>+</span></h3><p>Satisfied Clients</p></div>
+    <div class="stat-block"><h3 id="c3">0<span>+</span></h3><p>Cities Covered</p></div>
+    <div class="stat-block"><h3 id="c4">0<span>★</span></h3><p>Average Rating</p></div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="section">
+  <div class="s-inner">
+    <div class="s-head">
+      <div class="s-tag">Our Services</div>
+      <h2>Browse by Trade Category</h2>
+      <p>Select the type of skilled work you need and find the best professionals in your city</p>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card" onclick="location.href='search.html?service=plumber'">
+        <div class="cat-ic"><i class="fas fa-faucet"></i></div>
+        <h5>Plumber</h5>
+        <small>Pipes, leaks & fittings</small>
+        <div class="num">142 Available →</div>
+      </div>
+      <div class="cat-card" onclick="location.href='search.html?service=electrician'">
+        <div class="cat-ic"><i class="fas fa-bolt"></i></div>
+        <h5>Electrician</h5>
+        <small>Wiring & electrical work</small>
+        <div class="num">98 Available →</div>
+      </div>
+      <div class="cat-card" onclick="location.href='search.html?service=carpenter'">
+        <div class="cat-ic"><i class="fas fa-hammer"></i></div>
+        <h5>Carpenter</h5>
+        <small>Furniture & woodwork</small>
+        <div class="num">76 Available →</div>
+      </div>
+      <div class="cat-card" onclick="location.href='search.html?service=painter'">
+        <div class="cat-ic"><i class="fas fa-paint-roller"></i></div>
+        <h5>Painter</h5>
+        <small>Interior & exterior</small>
+        <div class="num">54 Available →</div>
+      </div>
+      <div class="cat-card" onclick="location.href='search.html'">
+        <div class="cat-ic"><i class="fas fa-wrench"></i></div>
+        <h5>Other Trades</h5>
+        <small>Mason, welder & more</small>
+        <div class="num">130+ Available →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOP TRADESMEN -->
+<section class="section bg-dark-alt">
+  <div class="s-inner">
+    <div class="s-head">
+      <div class="s-tag">Top Rated</div>
+      <h2>Featured Tradesmen</h2>
+      <p>Handpicked professionals with the highest ratings and most completed jobs</p>
+    </div>
+    <div class="tc-grid">
+
+      <div class="tc-card">
+        <div class="tc-head">
+          <div class="tc-avatar">AK</div>
+          <div>
+            <div class="tc-name">Ahmed Khan <span class="verified-tag"><i class="fas fa-check"></i> Verified</span></div>
+            <span class="tc-trade">⚡ Electrician</span>
+          </div>
+          <div class="tc-price">
+            <div class="amount">Rs.500</div>
+            <small>per hour</small>
+          </div>
+        </div>
+        <div class="tc-stars">★★★★★ <span style="color:#fff;font-weight:700">5.0</span> <span style="color:var(--muted);font-size:.8rem">(48 reviews)</span></div>
+        <p class="tc-desc" style="margin-top:12px;">12 years experience. Home wiring, MCB panel, UPS & solar installation specialist in Karachi.</p>
+        <div class="tc-meta-row">
+          <span><i class="fas fa-map-marker-alt"></i>Karachi</span>
+          <span><i class="fas fa-briefcase"></i>140+ jobs</span>
+          <span><i class="fas fa-clock"></i>12 yrs exp</span>
+        </div>
+        <a href="booking.html?id=1" class="btn-book">Book Now</a>
+        <a href="profile.html?id=1" class="btn-outline">View Profile</a>
+      </div>
+
+      <div class="tc-card">
+        <div class="tc-head">
+          <div class="tc-avatar">MR</div>
+          <div>
+            <div class="tc-name">Muhammad Raza <span class="verified-tag"><i class="fas fa-check"></i> Verified</span></div>
+            <span class="tc-trade">🔧 Plumber</span>
+          </div>
+          <div class="tc-price">
+            <div class="amount">Rs.400</div>
+            <small>per hour</small>
+          </div>
+        </div>
+        <div class="tc-stars">★★★★☆ <span style="color:#fff;font-weight:700">4.7</span> <span style="color:var(--muted);font-size:.8rem">(36 reviews)</span></div>
+        <p class="tc-desc" style="margin-top:12px;">8 years experience. Pipe leaks, bathroom fittings, water tank & pump installation across Lahore.</p>
+        <div class="tc-meta-row">
+          <span><i class="fas fa-map-marker-alt"></i>Lahore</span>
+          <span><i class="fas fa-briefcase"></i>95+ jobs</span>
+          <span><i class="fas fa-clock"></i>8 yrs exp</span>
+        </div>
+        <a href="booking.html?id=2" class="btn-book">Book Now</a>
+        <a href="profile.html?id=2" class="btn-outline">View Profile</a>
+      </div>
+
+      <div class="tc-card">
+        <div class="tc-head">
+          <div class="tc-avatar">SA</div>
+          <div>
+            <div class="tc-name">Salman Akhtar <span class="verified-tag"><i class="fas fa-check"></i> Verified</span></div>
+            <span class="tc-trade">🪚 Carpenter</span>
+          </div>
+          <div class="tc-price">
+            <div class="amount">Rs.600</div>
+            <small>per hour</small>
+          </div>
+        </div>
+        <div class="tc-stars">★★★★★ <span style="color:#fff;font-weight:700">4.9</span> <span style="color:var(--muted);font-size:.8rem">(62 reviews)</span></div>
+        <p class="tc-desc" style="margin-top:12px;">15 years experience. Custom furniture, wardrobes, kitchen cabinets & wooden doors in Karachi.</p>
+        <div class="tc-meta-row">
+          <span><i class="fas fa-map-marker-alt"></i>Karachi</span>
+          <span><i class="fas fa-briefcase"></i>200+ jobs</span>
+          <span><i class="fas fa-clock"></i>15 yrs exp</span>
+        </div>
+        <a href="booking.html?id=3" class="btn-book">Book Now</a>
+        <a href="profile.html?id=3" class="btn-outline">View Profile</a>
+      </div>
+
+    </div>
+    <div class="view-all-wrap">
+      <a href="search.html" class="btn-view-all">View All Tradesmen <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="s-inner">
+    <div class="s-head">
+      <div class="s-tag">Simple Process</div>
+      <h2>How TradeConnect Works</h2>
+      <p>Get your job done in 4 easy steps — no hassle, no confusion</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="step-num">01</div>
+        <div class="step-icon"><i class="fas fa-search"></i></div>
+        <h5>Search & Filter</h5>
+        <p>Select service type, enter your city, and filter by rating or price to narrow down the best options.</p>
+      </div>
+      <div class="how-card">
+        <div class="step-num">02</div>
+        <div class="step-icon"><i class="fas fa-user-check"></i></div>
+        <h5>Compare & Choose</h5>
+        <p>View detailed profiles, read verified client reviews, and compare rates before making a decision.</p>
+      </div>
+      <div class="how-card">
+        <div class="step-num">03</div>
+        <div class="step-icon"><i class="fas fa-calendar-check"></i></div>
+        <h5>Book & Confirm</h5>
+        <p>Submit your booking with date, time, and address. Tradesman confirms and arrives on schedule.</p>
+      </div>
+      <div class="how-card">
+        <div class="step-num">04</div>
+        <div class="step-icon"><i class="fas fa-star"></i></div>
+        <h5>Rate & Review</h5>
+        <p>After job completion, leave a honest rating to help other clients choose with confidence.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY TRADECONNECT -->
+<section class="section bg-dark-alt" id="about">
+  <div class="s-inner">
+    <div class="s-head">
+      <div class="s-tag">Why Choose Us</div>
+      <h2>Why TradeConnect?</h2>
+      <p>We are Pakistan's most transparent platform connecting clients with skilled tradesmen</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon"><i class="fas fa-shield-alt"></i></div>
+        <h5>100% Verified Tradesmen</h5>
+        <p>Every tradesman is verified — CNIC check, skill assessment, and background review before listing.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><i class="fas fa-star"></i></div>
+        <h5>Genuine Client Reviews</h5>
+        <p>Only clients who have completed a real booking can leave reviews — fully authentic ratings.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><i class="fas fa-receipt"></i></div>
+        <h5>Transparent Pricing</h5>
+        <p>Hourly rates are displayed upfront. No hidden charges, no last-minute surprises — ever.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><i class="fas fa-headset"></i></div>
+        <h5>Support 7 Days a Week</h5>
+        <p>Our dedicated support team is available every day to help resolve any issues quickly.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><i class="fas fa-city"></i></div>
+        <h5>10+ Cities Covered</h5>
+        <p>From Karachi to Islamabad — TradeConnect operates in all major cities across Pakistan.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><i class="fas fa-mobile-alt"></i></div>
+        <h5>Easy to Use Platform</h5>
+        <p>Search, compare, and book in under 2 minutes from any device — phone, tablet or desktop.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CTA BANNER -->
+<section style="padding:0 0 88px;">
+  <div class="cta-banner">
+    <h2>Are You a Skilled Tradesman?</h2>
+    <p>Join TradeConnect for free — create your profile and start getting clients across Pakistan.</p>
+    <a href="register.html?role=tradesman" class="btn-green-lg">
+      <i class="fas fa-tools"></i> Join as Tradesman — It's Free
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo-name" style="font-size:1.2rem;margin-bottom:14px;">Trade<span style="color:var(--green)">Connect</span></div>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/saylani.smit" class="soc-btn"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/saylani.smit/" class="soc-btn"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.linkedin.com/company/saylanimassit/" class="soc-btn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h6>Platform</h6>
+        <a href="index.html">Home</a>
+        <a href="search.html">Find Tradesmen</a>
+        <a href="register.html">Register</a>
+        <a href="login.html">Login</a>
+        <a href="#how">How It Works</a>
+      </div>
+      <div class="footer-col">
+        <h6>Services</h6>
+        <a href="search.html?service=plumber">Plumber</a>
+        <a href="search.html?service=electrician">Electrician</a>
+        <a href="search.html?service=carpenter">Carpenter</a>
+        <a href="search.html?service=painter">Painter</a>
+        <a href="search.html">All Trades</a>
+      </div>
+      <div class="footer-col">
+        <h6>Contact</h6>
+        <a href="#"><i class="fas fa-envelope" style="width:14px;margin-right:6px;color:var(--green)"></i>saylanimass@gmail.com</a>
+        <a href="#"><i class="fas fa-phone" style="width:14px;margin-right:6px;color:var(--green)"></i>+92 21 111 729 526</a>
+        <a href="#"><i class="fas fa-map-marker-alt" style="width:14px;margin-right:6px;color:var(--green)"></i>A-25, Bahadurabad Chowrangi, Karachi, Pakistan</a>
+        <a href="#"><i class="fas fa-clock" style="width:14px;margin-right:6px;color:var(--green)"></i>Mon–Sat, 9AM–6PM</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 TradeConnect — Muhammad Fasih Faisal | <a href="https://www.saylanimit.com">Saylani Mass IT Training (SMIT)</a> Karachi</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+
+function goSearch(){
+  const s=document.getElementById('svcSel').value;
+  const c=document.getElementById('cityIn').value;
+  location.href='search.html?'+(s?'service='+s+'&':'')+(c?'city='+encodeURIComponent(c):'');
+}
+
+// Counter animation — exactly like SMIT website
+function animCount(el,target,suffix,decimals=0){
+  let cur=0;const dur=2000;const step=16;const inc=target/(dur/step);
+  const t=setInterval(()=>{
+    cur+=inc;
+    if(cur>=target){cur=target;clearInterval(t);}
+    el.innerHTML=decimals?cur.toFixed(decimals)+suffix:Math.round(cur)+suffix;
+  },step);
+}
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      animCount(document.getElementById('c1'),500,'<span>+</span>');
+      animCount(document.getElementById('c2'),2000,'<span>+</span>');
+      animCount(document.getElementById('c3'),10,'<span>+</span>');
+      animCount(document.getElementById('c4'),4.8,'<span>★</span>',1);
+      obs.disconnect();
+    }
+  });
+},{threshold:.3});
+obs.observe(document.querySelector('.stats-section'));
+</script>
+</body>
+</html>

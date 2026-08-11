@@ -1,0 +1,236 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tradesman Dashboard — TradeConnect</title>
+<link rel="stylesheet" href="common.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+.avail-toggle{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:14px;margin-bottom:24px;}
+.toggle{position:relative;width:48px;height:26px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.slider{position:absolute;cursor:pointer;inset:0;background:#333;border-radius:26px;transition:.3s;}
+.toggle input:checked+.slider{background:var(--green);}
+.slider::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s;}
+.toggle input:checked+.slider::before{transform:translateX(22px);}
+.review-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:12px;}
+</style>
+</head><body>
+<div class="dash-wrap">
+<div class="sidebar">
+  <a href="index.html" class="logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;padding:0 20px 24px;"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L26 26" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><path d="M26 4L4 26" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><circle cx="4" cy="4" r="3" fill="#3bcc6e"/><circle cx="26" cy="4" r="3" fill="#3bcc6e"/><circle cx="4" cy="26" r="3" fill="#3bcc6e"/><circle cx="26" cy="26" r="3" fill="#3bcc6e"/></svg><span style="font-family:Inter,sans-serif;font-size:1.25rem;font-weight:800;color:#fff;letter-spacing:-.3px;">Trade <span style="color:#3bcc6e;">Connect</span></span></span></a>
+  <div class="sidebar-section">Main</div>
+  <nav class="sidebar-nav">
+    <a href="#" class="active" id="nav-all" onclick="filterStatus('dashboard',this)"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+  </nav>
+  <div class="sidebar-section">My Work</div>
+  <nav class="sidebar-nav">
+    <a href="#" id="nav-pending" onclick="filterStatus('pending',this)"><i class="fas fa-hourglass-half"></i>Pending Requests</a>
+    <a href="#" id="nav-accepted" onclick="filterStatus('accepted',this)"><i class="fas fa-check"></i>Accepted Jobs</a>
+    <a href="#" id="nav-completed" onclick="filterStatus('completed',this)"><i class="fas fa-check-circle"></i>Completed Jobs</a>
+    <a href="#" id="nav-allb" onclick="filterStatus('all',this)"><i class="fas fa-list"></i>All Bookings</a>
+    <a href="edit-profile.html"><i class="fas fa-user-edit"></i>Edit Profile</a>
+  </nav>
+  <div style="flex:1;"></div>
+  <div class="sidebar-footer">
+    <a href="login.html" style="color:var(--muted);font-size:.85rem;display:flex;align-items:center;gap:8px;"><i class="fas fa-sign-out-alt" style="color:var(--green)"></i>Logout</a>
+  </div>
+</div>
+<div class="dash-main">
+  <div class="topbar">
+    <div><h2 id="pageTitle">Welcome ⚡</h2><p id="pageSubtitle">Overview of your work</p></div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="avatar-sm" id="userInitials">?</div>
+      <div>
+        <div style="font-weight:700;font-size:.9rem;color:#fff" id="userName">Loading...</div>
+        <div style="color:var(--muted);font-size:.75rem" id="userTrade">Tradesman</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD SECTION -->
+  <div id="section-dashboard">
+    <div class="avail-toggle">
+      <label class="toggle"><input type="checkbox" id="availCb" checked onchange="toggleAvail(this)"><span class="slider"></span></label>
+      <div><div style="font-weight:700;color:#fff;font-size:.9rem">Availability Status</div><div style="color:var(--muted);font-size:.82rem" id="availTxt">● You are Available to clients</div></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="ic"><i class="fas fa-calendar-check"></i></div><h3 id="sTotal">0</h3><p>Total Jobs</p></div>
+      <div class="stat-card"><div class="ic"><i class="fas fa-hourglass-half"></i></div><h3 id="sPending">0</h3><p>Pending</p></div>
+      <div class="stat-card"><div class="ic"><i class="fas fa-check-circle"></i></div><h3 id="sCompleted">0</h3><p>Completed</p></div>
+      <div class="stat-card"><div class="ic"><i class="fas fa-money-bill"></i></div><h3 id="sEarnings">0</h3><p>Earnings (Rs.)</p></div>
+    </div>
+    <!-- Quick cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px;">
+      <div onclick="filterStatus('pending',document.getElementById('nav-pending'))" style="background:#0f0f0f;border:1px solid #1e1e1e;border-radius:12px;padding:18px;cursor:pointer;transition:.2s;" onmouseover="this.style.borderColor='#3bcc6e'" onmouseout="this.style.borderColor='#1e1e1e'">
+        <div style="color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Quick Access</div>
+        <div style="color:#fff;font-weight:700;display:flex;align-items:center;gap:8px;"><i class="fas fa-hourglass-half" style="color:var(--green)"></i> Pending Requests →</div>
+      </div>
+      <div onclick="filterStatus('accepted',document.getElementById('nav-accepted'))" style="background:#0f0f0f;border:1px solid #1e1e1e;border-radius:12px;padding:18px;cursor:pointer;transition:.2s;" onmouseover="this.style.borderColor='#3bcc6e'" onmouseout="this.style.borderColor='#1e1e1e'">
+        <div style="color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Quick Access</div>
+        <div style="color:#fff;font-weight:700;display:flex;align-items:center;gap:8px;"><i class="fas fa-check" style="color:var(--green)"></i> Accepted Jobs →</div>
+      </div>
+      <div onclick="filterStatus('completed',document.getElementById('nav-completed'))" style="background:#0f0f0f;border:1px solid #1e1e1e;border-radius:12px;padding:18px;cursor:pointer;transition:.2s;" onmouseover="this.style.borderColor='#3bcc6e'" onmouseout="this.style.borderColor='#1e1e1e'">
+        <div style="color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Quick Access</div>
+        <div style="color:#fff;font-weight:700;display:flex;align-items:center;gap:8px;"><i class="fas fa-check-circle" style="color:var(--green)"></i> Completed Jobs →</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOKINGS TABLE SECTION -->
+  <div id="section-bookings" style="display:none;">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Client</th><th>Service</th><th>Date & Time</th><th>Address</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="tbody"><tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted)"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+// Real session se tradesman info load karo
+async function loadUser(){
+  try{
+    const res  = await fetch('api/get_session.php');
+    const json = await res.json();
+    if(!json.ok){
+      window.location.href='login.html';
+      return;
+    }
+    const u = json.user;
+    const p = json.profile;
+
+    // Initials from real name
+    const initials = u.name.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const av = document.getElementById('userInitials');
+    if(u.profile_image){
+      av.innerHTML = `<img src="${u.profile_image}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    } else {
+      av.textContent = initials;
+    }
+    document.getElementById('userName').textContent = u.name;
+
+    // Real trade from DB
+    const trade = p ? (p.trade_category.charAt(0).toUpperCase()+p.trade_category.slice(1)) : 'Tradesman';
+    document.getElementById('userTrade').textContent = trade;
+
+    // Real first name in greeting
+    const firstName = u.name.trim().split(' ')[0];
+    document.getElementById('pageTitle').textContent = 'Welcome, '+firstName+' ⚡';
+
+    // Availability from DB
+    if(p){
+      const cb = document.getElementById('availCb');
+      cb.checked = p.is_available==1;
+      toggleAvail(cb);
+    }
+
+  }catch(e){
+    console.error('Session error:',e);
+  }
+}
+
+let allRows = [];
+
+function filterStatus(status, clickedEl){
+  // Active link update
+  document.querySelectorAll('.sidebar-nav a').forEach(a=>a.classList.remove('active'));
+  if(clickedEl) clickedEl.classList.add('active');
+
+  const dash = document.getElementById('section-dashboard');
+  const book = document.getElementById('section-bookings');
+  const title = document.getElementById('pageTitle');
+  const sub   = document.getElementById('pageSubtitle');
+
+  if(status === 'dashboard'){
+    // Show dashboard, hide table
+    dash.style.display = 'block';
+    book.style.display = 'none';
+    title.textContent  = 'Tradesman Dashboard ⚡';
+    sub.textContent    = 'Overview of your work';
+    return;
+  }
+
+  // Show table, hide dashboard
+  dash.style.display = 'none';
+  book.style.display = 'block';
+
+  const titles = {
+    all:       ['All Bookings 📋',       'All your booking requests'],
+    pending:   ['Pending Requests ⏳',   'Requests waiting for your response'],
+    accepted:  ['Accepted Jobs ✅',      'Jobs you have accepted'],
+    completed: ['Completed Jobs 🏁',     'Successfully completed jobs'],
+  };
+  title.textContent = titles[status]?.[0] || 'Bookings';
+  sub.textContent   = titles[status]?.[1] || '';
+
+  const filtered = status==='all'
+    ? allRows
+    : allRows.filter(b=>b.status===status);
+
+  renderRows(filtered);
+}
+
+function renderRows(rows){
+  const tb = document.getElementById('tbody');
+  const bmap={pending:'badge-pending',accepted:'badge-accepted',completed:'badge-completed',cancelled:'badge-cancelled'};
+  if(!rows.length){
+    tb.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted)">
+      <i class="fas fa-inbox" style="font-size:2rem;display:block;margin-bottom:10px;opacity:.3"></i>
+      No bookings found.
+    </td></tr>`;
+    return;
+  }
+  tb.innerHTML=rows.map((b,i)=>{
+    const d=new Date(b.booking_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    const lbl=b.status.charAt(0).toUpperCase()+b.status.slice(1);
+    const amt='Rs. '+parseFloat(b.total_amount).toLocaleString();
+    let act='';
+    if(b.status==='pending') act=`<button class="btn-sm btn-accept" onclick="upd(${b.id},'accepted')">Accept</button> <button class="btn-sm btn-reject" onclick="upd(${b.id},'cancelled')">Reject</button>`;
+    else if(b.status==='accepted') act=`<button class="btn-sm btn-complete" onclick="upd(${b.id},'completed')">Complete</button>`;
+    else act=`<span style="color:var(--muted);font-size:.8rem">—</span>`;
+    return `<tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td><strong>${b.cname}</strong><br><small>${b.phone||''}</small></td>
+      <td>${b.service_type}</td>
+      <td>${d}<br><small>${b.booking_time||''}</small></td>
+      <td style="font-size:.8rem;max-width:150px">${b.address||''}</td>
+      <td style="color:var(--green);font-weight:700">${amt}</td>
+      <td><span class="badge ${bmap[b.status]||'badge-pending'}">${lbl}</span></td>
+      <td>${act}</td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleAvail(cb){
+  const t=document.getElementById('availTxt');
+  t.textContent=cb.checked?'● You are Available to clients':'● You are Busy (hidden from clients)';
+  t.style.color=cb.checked?'var(--green)':'#ff6b6b';
+}
+async function load(){
+  try{
+    const res=await fetch('api/get_tradesman_bookings.php');
+    const json=await res.json();
+    allRows=json.data||[];
+    const total=allRows.length;
+    const pending=allRows.filter(b=>b.status==='pending').length;
+    const completed=allRows.filter(b=>b.status==='completed').length;
+    const earnings=allRows.filter(b=>b.status==='completed').reduce((s,b)=>s+parseFloat(b.total_amount),0);
+    document.getElementById('sTotal').textContent=total;
+    document.getElementById('sPending').textContent=pending;
+    document.getElementById('sCompleted').textContent=completed;
+    document.getElementById('sEarnings').textContent=Math.round(earnings).toLocaleString();
+    renderRows(allRows);
+  }catch(e){
+    document.getElementById('tbody').innerHTML='<tr><td colspan="8" style="text-align:center;padding:24px;color:#ff6b6b">⚠️ Database error. XAMPP chal raha hai?</td></tr>';
+  }
+}
+async function upd(id,status){
+  const fd=new FormData();fd.append('booking_id',id);fd.append('status',status);
+  await fetch('api/update_booking.php',{method:'POST',body:fd});
+  load();
+}
+loadUser();
+load();
+</script>
+</body></html>

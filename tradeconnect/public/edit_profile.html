@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Edit Profile — TradeConnect</title>
+<link rel="stylesheet" href="common.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+.page{max-width:700px;margin:36px auto;padding:0 20px;}
+.photo-section{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:16px;padding:32px;text-align:center;margin-bottom:20px;}
+.photo-wrap{position:relative;width:110px;height:110px;margin:0 auto 16px;}
+.photo-wrap img,.photo-initials{width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid #1a3a24;}
+.photo-initials{background:#0d1f14;display:flex;align-items:center;justify-content:center;font-size:2.2rem;font-weight:800;color:#3bcc6e;}
+.photo-overlay{position:absolute;bottom:0;right:0;width:34px;height:34px;border-radius:50%;background:#3bcc6e;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid #000;}
+.photo-overlay i{color:#000;font-size:.9rem;}
+#photoInput{display:none;}
+.photo-name{font-weight:800;font-size:1.2rem;color:#fff;margin-bottom:4px;}
+.photo-role{color:#555;font-size:.85rem;}
+.form-card{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:16px;padding:28px;margin-bottom:20px;}
+.form-card h3{font-weight:700;color:#fff;margin-bottom:20px;font-size:1rem;padding-bottom:12px;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;gap:8px;}
+.form-card h3 i{color:#3bcc6e;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn-save{background:#3bcc6e;color:#000;border:none;width:100%;padding:14px;border-radius:10px;font-weight:700;font-size:1rem;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;margin-top:8px;}
+.btn-save:hover{background:#2aaa58;}
+.preview-box{display:none;text-align:center;margin:12px 0;}
+.preview-box img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #3bcc6e;}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><path d="M3 3L25 25" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><path d="M25 3L3 25" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><circle cx="3" cy="3" r="2.5" fill="#3bcc6e"/><circle cx="25" cy="3" r="2.5" fill="#3bcc6e"/><circle cx="3" cy="25" r="2.5" fill="#3bcc6e"/><circle cx="25" cy="25" r="2.5" fill="#3bcc6e"/></svg>
+    <span style="font-size:1.2rem;font-weight:800;color:#fff;">Trade <span style="color:#3bcc6e;">Connect</span></span>
+  </a>
+  <a href="#" onclick="goBack()" style="color:#555;font-size:.88rem;text-decoration:none;"><i class="fas fa-arrow-left" style="margin-right:6px"></i>Back</a>
+</nav>
+
+<div class="page">
+
+  <!-- PHOTO SECTION -->
+  <div class="photo-section">
+    <div class="photo-wrap">
+      <div class="photo-initials" id="photoInitials">?</div>
+      <img id="photoImg" src="" style="display:none;">
+      <label class="photo-overlay" for="photoInput" title="Change photo">
+        <i class="fas fa-camera"></i>
+      </label>
+    </div>
+    <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(this)">
+    <div class="preview-box" id="previewBox">
+      <img id="previewImg" src="">
+      <div style="margin-top:8px;">
+        <button onclick="uploadPhoto()" style="background:#3bcc6e;color:#000;border:none;padding:8px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Upload Photo</button>
+        <button onclick="cancelPreview()" style="background:#1a1a1a;color:#aaa;border:1px solid #222;padding:8px 16px;border-radius:8px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-left:8px;">Cancel</button>
+      </div>
+    </div>
+    <div class="photo-name" id="profileName">Loading...</div>
+    <div class="photo-role" id="profileRole">—</div>
+    <div class="alert alert-success" id="photoSuccess" style="margin-top:12px;display:none;"><i class="fas fa-check-circle" style="margin-right:6px"></i>Photo updated!</div>
+    <div class="alert alert-error" id="photoError" style="margin-top:12px;display:none;"></div>
+  </div>
+
+  <!-- PERSONAL INFO -->
+  <div class="form-card">
+    <h3><i class="fas fa-user"></i>Personal Information</h3>
+    <div class="alert alert-success" id="infoSuccess" style="display:none;"><i class="fas fa-check-circle" style="margin-right:6px"></i>Profile updated successfully!</div>
+    <div class="alert alert-error" id="infoError" style="display:none;"></div>
+    <form onsubmit="saveProfile(event)">
+      <div class="two-col">
+        <div class="form-group"><label>Full Name</label><input type="text" id="fname" placeholder="Your full name" required></div>
+        <div class="form-group"><label>Phone Number</label><input type="text" id="fphone" placeholder="03XX-XXXXXXX"></div>
+      </div>
+      <div class="form-group"><label>City</label>
+        <select id="fcity">
+          <option value="">Select City</option>
+          <option>Karachi</option><option>Lahore</option><option>Islamabad</option>
+          <option>Rawalpindi</option><option>Faisalabad</option><option>Multan</option>
+          <option>Hyderabad</option><option>Peshawar</option><option>Quetta</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-save"><i class="fas fa-save" style="margin-right:8px"></i>Save Changes</button>
+    </form>
+  </div>
+
+  <!-- TRADESMAN PROFILE (only if tradesman) -->
+  <div class="form-card" id="tradesmanSection" style="display:none;">
+    <h3><i class="fas fa-tools"></i>Tradesman Profile</h3>
+    <div class="form-group"><label>Trade Category</label>
+      <select id="fTrade">
+        <option value="plumber">🔧 Plumber</option>
+        <option value="electrician">⚡ Electrician</option>
+        <option value="carpenter">🪚 Carpenter</option>
+        <option value="painter">🎨 Painter</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="two-col">
+      <div class="form-group"><label>Years of Experience</label><input type="number" id="fExp" min="0" max="50" placeholder="e.g. 5"></div>
+      <div class="form-group"><label>Hourly Rate (Rs.)</label><input type="number" id="fRate" min="0" placeholder="e.g. 500"></div>
+    </div>
+    <div class="form-group"><label>Bio / About</label><textarea id="fBio" rows="3" placeholder="Tell clients about your skills..."></textarea></div>
+    <div class="form-group" style="display:flex;align-items:center;gap:12px;">
+      <label style="margin:0;">Available for work</label>
+      <label style="position:relative;width:48px;height:26px;display:inline-block;margin:0;">
+        <input type="checkbox" id="fAvail" style="opacity:0;width:0;height:0;">
+        <span onclick="document.getElementById('fAvail').click()" id="toggleSlider" style="position:absolute;cursor:pointer;inset:0;background:#333;border-radius:26px;transition:.3s;"></span>
+      </label>
+      <span id="availLabel" style="color:#555;font-size:.85rem;">Unavailable</span>
+    </div>
+    <button type="button" onclick="saveTradesmanProfile()" class="btn-save"><i class="fas fa-save" style="margin-right:8px"></i>Save Tradesman Info</button>
+  </div>
+
+</div>
+
+<script>
+let currentUser = null;
+
+// Toggle visual
+document.getElementById('fAvail').addEventListener('change', function(){
+  document.getElementById('toggleSlider').style.background = this.checked ? '#3bcc6e' : '#333';
+  document.getElementById('availLabel').textContent = this.checked ? 'Available' : 'Unavailable';
+  document.getElementById('availLabel').style.color = this.checked ? '#3bcc6e' : '#555';
+});
+
+function goBack(){
+  const role = currentUser?.role;
+  if(role==='tradesman') location.href='tradesman-dashboard.html';
+  else location.href='client-dashboard.html';
+}
+
+// Load user data
+async function loadProfile(){
+  const res  = await fetch('api/get_session.php');
+  const json = await res.json();
+  if(!json.ok){ location.href='login.html'; return; }
+  currentUser = json.user;
+  const u = json.user;
+  const p = json.profile;
+
+  // Name & role
+  const initials = u.name.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('profileName').textContent = u.name;
+  document.getElementById('profileRole').textContent = u.role.charAt(0).toUpperCase()+u.role.slice(1);
+  document.getElementById('photoInitials').textContent = initials;
+
+  // Photo
+  if(u.profile_image){
+    document.getElementById('photoImg').src = 'uploads/profiles/'+u.profile_image;
+    document.getElementById('photoImg').style.display = 'block';
+    document.getElementById('photoInitials').style.display = 'none';
+  }
+
+  // Fill form
+  document.getElementById('fname').value  = u.name||'';
+  document.getElementById('fphone').value = u.phone||'';
+  document.getElementById('fcity').value  = u.city||'';
+
+  // Tradesman section
+  if(u.role==='tradesman' && p){
+    document.getElementById('tradesmanSection').style.display='block';
+    document.getElementById('fTrade').value = p.trade_category||'other';
+    document.getElementById('fExp').value   = p.experience_years||0;
+    document.getElementById('fRate').value  = p.hourly_rate||500;
+    document.getElementById('fBio').value   = p.bio||'';
+    document.getElementById('fAvail').checked = p.is_available==1;
+    document.getElementById('toggleSlider').style.background = p.is_available==1?'#3bcc6e':'#333';
+    document.getElementById('availLabel').textContent = p.is_available==1?'Available':'Unavailable';
+    document.getElementById('availLabel').style.color = p.is_available==1?'#3bcc6e':'#555';
+  }
+}
+
+// Photo preview
+function previewPhoto(input){
+  if(!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('previewImg').src = e.target.result;
+    document.getElementById('previewBox').style.display='block';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function cancelPreview(){
+  document.getElementById('previewBox').style.display='none';
+  document.getElementById('photoInput').value='';
+}
+
+// Upload photo
+async function uploadPhoto(){
+  const file = document.getElementById('photoInput').files[0];
+  if(!file) return;
+  const fd = new FormData();
+  fd.append('photo', file);
+  const res  = await fetch('api/upload_photo.php',{method:'POST',body:fd});
+  const json = await res.json();
+  if(json.ok){
+    document.getElementById('photoImg').src = json.url+'?t='+Date.now();
+    document.getElementById('photoImg').style.display='block';
+    document.getElementById('photoInitials').style.display='none';
+    document.getElementById('previewBox').style.display='none';
+    document.getElementById('photoSuccess').style.display='block';
+    setTimeout(()=>document.getElementById('photoSuccess').style.display='none',3000);
+  } else {
+    document.getElementById('photoError').textContent='⚠️ '+json.msg;
+    document.getElementById('photoError').style.display='block';
+  }
+}
+
+// Save personal info
+async function saveProfile(e){
+  e.preventDefault();
+  const fd = new FormData();
+  fd.append('name',  document.getElementById('fname').value);
+  fd.append('phone', document.getElementById('fphone').value);
+  fd.append('city',  document.getElementById('fcity').value);
+  const res  = await fetch('api/update_profile.php',{method:'POST',body:fd});
+  const json = await res.json();
+  if(json.ok){
+    document.getElementById('infoSuccess').style.display='block';
+    document.getElementById('profileName').textContent = document.getElementById('fname').value;
+    setTimeout(()=>document.getElementById('infoSuccess').style.display='none',3000);
+  } else {
+    document.getElementById('infoError').textContent='⚠️ Update failed!';
+    document.getElementById('infoError').style.display='block';
+  }
+}
+
+// Save tradesman profile
+async function saveTradesmanProfile(){
+  const fd = new FormData();
+  fd.append('trade_category',    document.getElementById('fTrade').value);
+  fd.append('experience_years',  document.getElementById('fExp').value);
+  fd.append('hourly_rate',       document.getElementById('fRate').value);
+  fd.append('bio',               document.getElementById('fBio').value);
+  fd.append('is_available',      document.getElementById('fAvail').checked?1:0);
+  const res  = await fetch('api/update_tradesman_profile.php',{method:'POST',body:fd});
+  const json = await res.json();
+  if(json.ok){
+    document.getElementById('infoSuccess').style.display='block';
+    setTimeout(()=>document.getElementById('infoSuccess').style.display='none',3000);
+  }
+}
+
+loadProfile();
+</script>
+</body>
+</html>

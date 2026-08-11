@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Tradesmen — TradeConnect</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#3bcc6e;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:#000;color:#fff;min-height:100vh;}
+nav{background:#0a0a0a;border-bottom:1px solid #1a1a1a;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-weight:800;font-size:1.4rem;color:#fff;text-decoration:none;}
+.logo span{color:var(--primary);}
+nav a{color:#666;text-decoration:none;font-size:.9rem;margin-left:16px;}
+nav a:hover{color:#fff;}
+.btn-nav{background:var(--primary)!important;color:#000!important;padding:8px 20px;border-radius:8px;font-weight:700;}
+/* Search top */
+.search-top{background:#0a0a0a;border-bottom:1px solid #1a1a1a;padding:20px 24px;}
+.search-inner{max-width:900px;margin:auto;display:flex;gap:8px;flex-wrap:wrap;}
+.search-inner select,.search-inner input{flex:1;min-width:140px;padding:12px 14px;border:1px solid #222;border-radius:9px;background:#111;color:#fff;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;}
+.search-inner select option{background:#111;color:#fff;}
+.search-inner input::placeholder{color:#444;}
+.search-inner select:focus,.search-inner input:focus{border-color:var(--primary);}
+.btn-search{background:var(--primary);color:#000;border:none;border-radius:9px;padding:12px 26px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;}
+/* Layout */
+.page-wrap{max-width:1200px;margin:28px auto;padding:0 20px;display:grid;grid-template-columns:250px 1fr;gap:24px;}
+@media(max-width:768px){.page-wrap{grid-template-columns:1fr;}}
+/* Filter panel */
+.filter-panel{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:14px;padding:22px;height:fit-content;}
+.filter-panel h6{font-weight:700;font-size:.88rem;color:#fff;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #1e1e1e;display:flex;align-items:center;gap:8px;}
+.filter-panel h6 i{color:var(--primary);}
+.filter-group{margin-bottom:20px;}
+.filter-group label{font-weight:600;font-size:.82rem;color:#aaa;display:block;margin-bottom:10px;}
+.filter-group select{width:100%;padding:10px;border:1px solid #222;border-radius:8px;background:#111;color:#fff;font-family:'Inter',sans-serif;outline:none;}
+.filter-group select option{background:#111;}
+.filter-group select:focus{border-color:var(--primary);}
+input[type=range]{width:100%;accent-color:var(--primary);}
+.radio-list{list-style:none;padding:0;margin:0;}
+.radio-list li{margin-bottom:10px;}
+.radio-list label{
+  font-size:.85rem;color:#888;cursor:pointer;
+  display:flex;align-items:center;gap:10px;
+  flex-direction:row;flex-wrap:nowrap;
+  white-space:nowrap;
+}
+.radio-list label input[type=radio]{
+  accent-color:var(--primary);
+  width:15px;height:15px;
+  flex-shrink:0;cursor:pointer;
+  margin:0;
+}
+.btn-filter{background:var(--primary);color:#000;border:none;width:100%;padding:11px;border-radius:9px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;margin-top:8px;}
+/* Results */
+.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.results-header h4{font-weight:800;font-size:1.1rem;color:#fff;margin:0;}
+.results-header select{border:1px solid #222;border-radius:8px;padding:8px 12px;background:#111;color:#fff;font-family:'Inter',sans-serif;font-size:.85rem;outline:none;}
+.results-header select option{background:#111;}
+/* Tradesman card */
+.tc{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:14px;overflow:hidden;margin-bottom:16px;display:flex;}
+@media(max-width:560px){.tc{flex-direction:column;}}
+.tc:hover{border-color:#2a2a2a;}
+.tc-left{background:linear-gradient(135deg,#0a0a0a,#111);padding:24px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:140px;border-right:1px solid #1e1e1e;}
+.avatar{width:58px;height:58px;border-radius:12px;background:#0d1f14;border:1px solid #1a3a24;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;color:var(--primary);margin-bottom:10px;}
+.tc-left h5{color:#fff;font-size:.9rem;font-weight:700;margin:0 0 6px;text-align:center;}
+.badge-trade{background:#0d1f14;color:var(--primary);border:1px solid #1a3a24;padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:600;}
+.avail-on{color:var(--primary);font-size:.72rem;margin-top:6px;}
+.avail-off{color:#ff6b6b;font-size:.72rem;margin-top:6px;}
+.tc-body{padding:18px 20px;flex:1;}
+.tc-top-row{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:8px;}
+.stars{color:#f5c518;font-size:.88rem;}
+.rating-num{font-weight:700;color:#fff;margin-left:4px;}
+.review-count{color:#555;font-size:.8rem;}
+.price{color:var(--primary);font-weight:800;font-size:1.05rem;}
+.verified-badge{background:#0d1f14;color:var(--primary);border:1px solid #1a3a24;border-radius:4px;padding:2px 8px;font-size:.7rem;font-weight:700;margin-left:6px;}
+.tc-meta{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0 10px;font-size:.8rem;color:#555;}
+.tc-meta i{color:var(--primary);margin-right:3px;}
+.tc-desc{color:#666;font-size:.85rem;line-height:1.6;margin-bottom:14px;}
+.tc-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-book{background:var(--primary);color:#000;border:none;border-radius:8px;padding:9px 20px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;text-decoration:none;display:inline-block;}
+.btn-book:hover{background:#2aaa58;}
+.btn-view{border:1px solid #2a2a2a;color:#aaa;background:transparent;border-radius:8px;padding:8px 18px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;text-decoration:none;display:inline-block;}
+.btn-view:hover{border-color:var(--primary);color:var(--primary);}
+.no-results{text-align:center;padding:60px;color:#444;}
+.no-results i{font-size:3rem;margin-bottom:16px;display:block;color:#222;}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L26 26" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><path d="M26 4L4 26" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><circle cx="4" cy="4" r="3" fill="#3bcc6e"/><circle cx="26" cy="4" r="3" fill="#3bcc6e"/><circle cx="4" cy="26" r="3" fill="#3bcc6e"/><circle cx="26" cy="26" r="3" fill="#3bcc6e"/></svg><span style="font-family:Inter,sans-serif;font-size:1.25rem;font-weight:800;color:#fff;letter-spacing:-.3px;">Trade <span style="color:#3bcc6e;">Connect</span></span></span>
+  </a>
+  <div>
+    <a href="login.html">Login</a>
+    <a href="register.html" class="btn-nav">Register</a>
+  </div>
+</nav>
+<div class="search-top">
+  <div class="search-inner">
+    <select id="serviceFilter">
+      <option value="">All Services</option>
+      <option value="plumber">🔧 Plumber</option>
+      <option value="electrician">⚡ Electrician</option>
+      <option value="carpenter">🪚 Carpenter</option>
+      <option value="painter">🎨 Painter</option>
+    </select>
+    <input type="text" id="cityFilter" placeholder="City (e.g. Karachi)">
+    <button class="btn-search" onclick="applyFilters()"><i class="fas fa-search" style="margin-right:6px"></i>Search</button>
+  </div>
+</div>
+<div class="page-wrap">
+  <div class="filter-panel">
+    <h6><i class="fas fa-sliders-h"></i>Filters</h6>
+    <div class="filter-group">
+      <label>Minimum Rating</label>
+      <ul class="radio-list">
+        <li><label><input type="radio" name="rating" value="any" checked> Any Rating</label></li>
+        <li><label><input type="radio" name="rating" value="4"> ★ 4+ Stars</label></li>
+        <li><label><input type="radio" name="rating" value="4.5"> ★ 4.5+ Stars</label></li>
+        <li><label><input type="radio" name="rating" value="5"> ★ 5 Stars Only</label></li>
+      </ul>
+    </div>
+    <div class="filter-group">
+      <label>Max Rate: <span id="rateLabel">Rs. 1000/hr</span></label>
+      <input type="range" min="200" max="2000" value="1000" step="100" id="rateSlider" oninput="document.getElementById('rateLabel').textContent='Rs. '+this.value+'/hr'">
+    </div>
+    <div class="filter-group">
+      <label>Availability</label>
+      <ul class="radio-list">
+        <li><label><input type="radio" name="avail" value="any" checked> All</label></li>
+        <li><label><input type="radio" name="avail" value="available"> Available Now</label></li>
+      </ul>
+    </div>
+    <button class="btn-filter" onclick="applyFilters()">Apply Filters</button>
+  </div>
+  <div>
+    <div class="results-header">
+      <h4 id="resultCount">Showing 6 Tradesmen</h4>
+      <select onchange="sortResults(this.value)">
+        <option>Sort: Top Rated</option>
+        <option>Sort: Price Low-High</option>
+        <option>Sort: Price High-Low</option>
+        <option>Sort: Most Jobs</option>
+      </select>
+    </div>
+    <div id="resultsList"></div>
+  </div>
+</div>
+<script>
+let allTradesmen = [];
+const labels={plumber:"🔧 Plumber",electrician:"⚡ Electrician",carpenter:"🪚 Carpenter",painter:"🎨 Painter",other:"🔨 Other"};
+const stars=r=>{ r=parseFloat(r); return r>=5?'★★★★★':r>=4.5?'★★★★½':r>=4?'★★★★☆':r>=3?'★★★☆☆':'★★☆☆☆'; };
+
+function getInitials(name){
+  return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+}
+
+function renderCards(data){
+  const list=document.getElementById('resultsList');
+  document.getElementById('resultCount').textContent=`Showing ${data.length} Tradesman${data.length!==1?'s':''}`;
+  if(!data.length){
+    list.innerHTML=`<div class="no-results"><i class="fas fa-search"></i><p>No tradesmen found.<br>Try adjusting your filters.</p></div>`;
+    return;
+  }
+  list.innerHTML=data.map(t=>`
+    <div class="tc">
+      <div class="tc-left">
+        <div class="avatar">${getInitials(t.name)}</div>
+        <h5>${t.name}</h5>
+        <span class="badge-trade">${labels[t.trade_category]||'🔨 '+t.trade_category}</span>
+        <span class="${t.is_available==1?'avail-on':'avail-off'}">● ${t.is_available==1?'Available':'Busy'}</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-top-row">
+          <div>
+            <span class="stars">${stars(t.rating_avg)}</span>
+            <span class="rating-num">${parseFloat(t.rating_avg||0).toFixed(1)}</span>
+            ${t.is_verified==1?'<span class="verified-badge">✓ Verified</span>':''}
+          </div>
+          <span class="price">Rs. ${parseFloat(t.hourly_rate).toLocaleString()}/hr</span>
+        </div>
+        <div class="tc-meta">
+          <span><i class="fas fa-map-marker-alt"></i>${t.city||'—'}</span>
+          <span><i class="fas fa-clock"></i>${t.experience_years||0} yrs exp</span>
+          <span><i class="fas fa-briefcase"></i>${t.total_jobs||0}+ jobs</span>
+        </div>
+        <p class="tc-desc">${t.bio||'Experienced tradesman available for hire.'}</p>
+        <div class="tc-actions">
+          <a href="booking.html?id=${t.id}" class="btn-book"><i class="fas fa-calendar-check" style="margin-right:6px"></i>Book Now</a>
+          <a href="profile.html?id=${t.id}" class="btn-view"><i class="fas fa-eye" style="margin-right:6px"></i>View Profile</a>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function applyFilters(){
+  const service = document.getElementById('serviceFilter').value;
+  const city    = document.getElementById('cityFilter').value.toLowerCase().trim();
+  const ratingVal = document.querySelector('input[name="rating"]:checked').value;
+  const maxRate   = parseInt(document.getElementById('rateSlider').value);
+  const avail     = document.querySelector('input[name="avail"]:checked').value;
+  let filtered = allTradesmen.filter(t=>{
+    if(service && t.trade_category!==service) return false;
+    if(city && !(t.city||'').toLowerCase().includes(city)) return false;
+    if(ratingVal!=='any' && parseFloat(t.rating_avg)<parseFloat(ratingVal)) return false;
+    if(parseFloat(t.hourly_rate)>maxRate) return false;
+    if(avail==='available' && t.is_available!=1) return false;
+    return true;
+  });
+  renderCards(filtered);
+}
+
+function sortResults(val){
+  let sorted=[...allTradesmen];
+  if(val.includes('Low-High'))  sorted.sort((a,b)=>a.hourly_rate-b.hourly_rate);
+  else if(val.includes('High-Low')) sorted.sort((a,b)=>b.hourly_rate-a.hourly_rate);
+  else if(val.includes('Jobs')) sorted.sort((a,b)=>b.total_jobs-a.total_jobs);
+  else sorted.sort((a,b)=>b.rating_avg-a.rating_avg);
+  renderCards(sorted);
+}
+
+// Real DB se load karo
+async function loadTradesmen(){
+  document.getElementById('resultsList').innerHTML=
+    '<div style="text-align:center;padding:60px;color:var(--muted)"><i class="fas fa-spinner fa-spin" style="font-size:2rem"></i></div>';
+  try{
+    const res  = await fetch('api/get_search_tradesmen.php');
+    const json = await res.json();
+    allTradesmen = json.tradesmen || [];
+    applyFilters();
+  }catch(e){
+    document.getElementById('resultsList').innerHTML=
+      '<div style="text-align:center;padding:60px;color:#ff6b6b">⚠️ Database error. XAMPP chal raha hai?</div>';
+  }
+}
+const p=new URLSearchParams(window.location.search);
+if(p.get('service'))document.getElementById('serviceFilter').value=p.get('service');
+if(p.get('city'))document.getElementById('cityFilter').value=p.get('city');
+loadTradesmen();
+</script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Panel — TradeConnect</title>
+<link rel="stylesheet" href="common.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+.badge-client{background:#0d1f3a;color:#5ba3f5;border:1px solid #1a3a6e;}
+.badge-tradesman{background:#0d1f14;color:#3bcc6e;border:1px solid #1a3a24;}
+.badge-admin{background:#1a0d2a;color:#b07fff;border:1px solid #3a1a5e;}
+.badge-verified{background:#0d1f14;color:#3bcc6e;border:1px solid #1a3a24;}
+.badge-unverified{background:#2a0d0d;color:#ff6b6b;border:1px solid #4a1a1a;}
+.srch{background:#111;border:1px solid #222;color:#fff;border-radius:8px;padding:8px 14px;font-family:'Inter',sans-serif;font-size:.85rem;outline:none;width:220px;}
+.srch::placeholder{color:#444;}.srch:focus{border-color:var(--green);}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.sec-title{font-weight:700;font-size:1rem;color:#fff;}
+/* Graph fix */
+.graph-box{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:16px;padding:24px;overflow:hidden;min-width:0;}
+.graph-box h4{font-weight:700;color:#fff;margin:0 0 4px;font-size:.95rem;}
+.graph-box p{color:#555;font-size:.78rem;margin:0 0 16px;}
+.chart-wrap{position:relative;width:100%;height:220px;}
+.charts-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px;}
+.charts-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:20px;}
+@media(max-width:900px){.charts-grid-2{grid-template-columns:1fr;}.charts-grid-3{grid-template-columns:1fr;}}
+</style>
+</head><body>
+<div class="dash-wrap">
+<div class="sidebar">
+  <a href="index.html" class="logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;padding:0 20px 24px;"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L26 26" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><path d="M26 4L4 26" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><circle cx="4" cy="4" r="3" fill="#3bcc6e"/><circle cx="26" cy="4" r="3" fill="#3bcc6e"/><circle cx="4" cy="26" r="3" fill="#3bcc6e"/><circle cx="26" cy="26" r="3" fill="#3bcc6e"/></svg><span style="font-family:Inter,sans-serif;font-size:1.25rem;font-weight:800;color:#fff;letter-spacing:-.3px;">Trade <span style="color:#3bcc6e;">Connect</span></span></span></a>
+  <div class="sidebar-section">Manage</div>
+  <nav class="sidebar-nav">
+    <a href="#" class="active" id="nav-dashboard" onclick="showTab('dashboard',this)"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+    <a href="#" id="nav-users" onclick="showTab('users',this)"><i class="fas fa-users"></i>All Users</a>
+    <a href="#" id="nav-bookings" onclick="showTab('bookings',this)"><i class="fas fa-calendar-alt"></i>All Bookings</a>
+    <a href="#" id="nav-tradesmen" onclick="showTab('tradesmen',this)"><i class="fas fa-tools"></i>Tradesmen</a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="login.html" style="color:var(--muted);font-size:.85rem;display:flex;align-items:center;gap:8px;"><i class="fas fa-sign-out-alt" style="color:var(--green)"></i>Logout</a>
+  </div>
+</div>
+<div class="dash-main">
+  <!-- DASHBOARD -->
+  <div id="tab-dashboard">
+    <div class="topbar">
+      <div><h2>Admin Panel ⚙️</h2><p>TradeConnect Management</p></div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="avatar-sm">A</div>
+        <div><div style="font-weight:700;font-size:.9rem;color:#fff">Admin</div><div style="color:var(--muted);font-size:.78rem">Administrator</div></div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="ic"><i class="fas fa-users"></i></div><h3 id="sUsers">—</h3><p>Total Users</p></div>
+      <div class="stat-card"><div class="ic"><i class="fas fa-tools"></i></div><h3 id="sTrade">—</h3><p>Tradesmen</p></div>
+      <div class="stat-card"><div class="ic"><i class="fas fa-calendar-check"></i></div><h3 id="sBook">—</h3><p>Total Bookings</p></div>
+      <div class="stat-card"><div class="ic"><i class="fas fa-money-bill"></i></div><h3 id="sRev">—</h3><p>Revenue (Rs.)</p></div>
+    </div>
+    <!-- Quick summary cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:8px;">
+      <div style="background:#0f0f0f;border:1px solid #1e1e1e;border-radius:14px;padding:20px;cursor:pointer;" onclick="showTab('users',document.getElementById('nav-users'))">
+        <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Quick Access</div>
+        <div style="color:#fff;font-weight:700;display:flex;align-items:center;gap:8px;"><i class="fas fa-users" style="color:var(--green)"></i> View All Users →</div>
+      </div>
+      <div style="background:#0f0f0f;border:1px solid #1e1e1e;border-radius:14px;padding:20px;cursor:pointer;" onclick="showTab('bookings',document.getElementById('nav-bookings'))">
+        <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Quick Access</div>
+        <div style="color:#fff;font-weight:700;display:flex;align-items:center;gap:8px;"><i class="fas fa-calendar-alt" style="color:var(--green)"></i> View All Bookings →</div>
+      </div>
+      <div style="background:#0f0f0f;border:1px solid #1e1e1e;border-radius:14px;padding:20px;cursor:pointer;" onclick="showTab('tradesmen',document.getElementById('nav-tradesmen'))">
+        <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Quick Access</div>
+        <div style="color:#fff;font-weight:700;display:flex;align-items:center;gap:8px;"><i class="fas fa-tools" style="color:var(--green)"></i> View Tradesmen →</div>
+      </div>
+    </div>
+
+    <!-- GRAPHS SECTION -->
+    <div class="charts-grid-2" style="margin-top:24px;">
+      <div class="graph-box">
+        <h4>Bookings by Status</h4>
+        <p>All time breakdown</p>
+        <div class="chart-wrap">
+          <canvas id="chartStatus"></canvas>
+        </div>
+      </div>
+      <div class="graph-box">
+        <h4>Bookings by Service</h4>
+        <p>Which trades get most bookings</p>
+        <div class="chart-wrap">
+          <canvas id="chartService"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-grid-2">
+      <div class="graph-box">
+        <h4>Revenue (Last 6 Months)</h4>
+        <p>Completed bookings revenue in Rs.</p>
+        <div class="chart-wrap">
+          <canvas id="chartRevenue"></canvas>
+        </div>
+      </div>
+      <div class="graph-box">
+        <h4>Users by Role</h4>
+        <p>Client vs Tradesman vs Admin</p>
+        <div class="chart-wrap">
+          <canvas id="chartUsers"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Tradesmen -->
+    <div style="background:#0f0f0f;border:1px solid #1e1e1e;border-radius:16px;padding:24px;margin-top:20px;">
+      <div style="font-weight:700;color:#fff;margin-bottom:16px;font-size:.95rem;">🏆 Top Tradesmen by Jobs</div>
+      <div id="topTradesmen" style="display:grid;gap:10px;"></div>
+    </div>
+
+  </div>
+
+  <!-- USERS TABLE -->
+  <div id="tab-users" style="display:none">
+    <div class="topbar"><div><h2>All Users</h2><p>Manage registered users</p></div></div>
+    <div class="sec-hdr"><span class="sec-title">All Users</span><input class="srch" placeholder="🔍 Search users..." oninput="srch(this,'usersTb')"></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>City</th><th>Role</th><th>Action</th></tr></thead>
+      <tbody id="usersTb"><tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr></tbody>
+    </table></div>
+  </div>
+  <!-- BOOKINGS TABLE -->
+  <div id="tab-bookings" style="display:none">
+    <div class="sec-hdr"><span class="sec-title">All Bookings</span><input class="srch" placeholder="🔍 Search..." oninput="srch(this,'bookingsTb')"></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>#</th><th>Client</th><th>Tradesman</th><th>Service</th><th>Date</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody id="bookingsTb"><tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted)"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr></tbody>
+    </table></div>
+  </div>
+  <!-- TRADESMEN TABLE -->
+  <div id="tab-tradesmen" style="display:none">
+    <div class="sec-hdr"><span class="sec-title">Tradesmen Management</span><input class="srch" placeholder="🔍 Search..." oninput="srch(this,'tradeTb')"></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>#</th><th>Name</th><th>Trade</th><th>City</th><th>Rate</th><th>Jobs</th><th>Verified</th><th>Action</th></tr></thead>
+      <tbody id="tradeTb"><tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted)"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+</div>
+<script>
+function showTab(t){
+  ['users','bookings','tradesmen'].forEach(x=>document.getElementById('tab-'+x).style.display=x===t?'block':'none');
+  if(t==='bookings')  loadBookings();
+  if(t==='users')     loadUsers();
+  if(t==='tradesmen') loadTradesmen();
+}
+
+async function loadTradesmen(){
+  try{
+    const res  = await fetch('api/get_tradesmen.php');
+    const json = await res.json();
+    const rows = json.tradesmen || [];
+    const tb   = document.getElementById('tradeTb');
+    if(!rows.length){
+      tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted)">No tradesmen registered yet.</td></tr>';
+      return;
+    }
+    tb.innerHTML = rows.map((t,i)=>{
+      const trade = t.trade_category.charAt(0).toUpperCase()+t.trade_category.slice(1);
+      const rate  = 'Rs. '+parseFloat(t.hourly_rate).toLocaleString()+'/hr';
+      const vBadge = t.is_verified==1
+        ? `<span class="badge badge-verified">✓ Verified</span>`
+        : `<span class="badge badge-unverified">Unverified</span>`;
+      const action = t.is_verified==1
+        ? `<button class="btn-sm btn-reject" onclick="removeTradesman(${t.id},this)">Remove</button>`
+        : `<button class="btn-sm btn-accept" onclick="verifyTradesman(${t.id},this)">Verify</button>`;
+      return `<tr>
+        <td style="color:var(--muted)">${i+1}</td>
+        <td><strong>${t.name}</strong></td>
+        <td>${trade}</td>
+        <td>${t.city||'—'}</td>
+        <td>${rate}</td>
+        <td>${t.total_jobs||0}</td>
+        <td>${vBadge}</td>
+        <td>${action}</td>
+      </tr>`;
+    }).join('');
+  }catch(e){
+    document.getElementById('tradeTb').innerHTML=
+      '<tr><td colspan="8" style="text-align:center;padding:24px;color:#ff6b6b">⚠️ Database error.</td></tr>';
+  }
+}
+
+async function verifyTradesman(id, btn){
+  const fd=new FormData(); fd.append('id',id); fd.append('status',1);
+  await fetch('api/verify_tradesman.php',{method:'POST',body:fd});
+  loadTradesmen();
+}
+async function removeTradesman(id, btn){
+  if(!confirm('Is tradesman ko remove karna chahte ho?')) return;
+  const fd=new FormData(); fd.append('id',id); fd.append('status',0);
+  await fetch('api/verify_tradesman.php',{method:'POST',body:fd});
+  loadTradesmen();
+}
+function srch(inp,tbId){
+  const q=inp.value.toLowerCase();
+  document.querySelectorAll('#'+tbId+' tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q)?'':'none');
+}
+function verify(btn){
+  btn.closest('tr').querySelector('.badge').className='badge badge-verified';
+  btn.closest('tr').querySelector('.badge').textContent='✓ Verified';
+  btn.className='btn-sm btn-reject';btn.textContent='Remove';
+}
+
+// Real DB se users + stats load karo
+async function loadUsers(){
+  try{
+    const res  = await fetch('api/get_users.php');
+    const json = await res.json();
+
+    // Stats update karo
+    const s = json.stats;
+    document.getElementById('sUsers').textContent = s.users;
+    document.getElementById('sTrade').textContent = s.trade;
+    document.getElementById('sBook').textContent  = s.bookings;
+    const rev = s.revenue >= 1000000
+      ? (s.revenue/1000000).toFixed(1)+'M'
+      : s.revenue >= 1000
+      ? (s.revenue/1000).toFixed(0)+'K'
+      : s.revenue;
+    document.getElementById('sRev').textContent = rev;
+
+    // Users table
+    const tb = document.getElementById('usersTb');
+    const users = json.users || [];
+    if(!users.length){
+      tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">No users found.</td></tr>';
+      return;
+    }
+    const badgeMap = {
+      client:    'badge-client',
+      tradesman: 'badge-tradesman',
+      admin:     'badge-admin',
+    };
+    tb.innerHTML = users.map((u,i)=>{
+      const badge = badgeMap[u.role] || 'badge-client';
+      const label = u.role.charAt(0).toUpperCase()+u.role.slice(1);
+      const action = u.role==='admin'
+        ? '—'
+        : `<button class="btn-sm btn-reject" onclick="deleteUser(${u.id},this)">Delete</button>`;
+      return `<tr>
+        <td style="color:var(--muted)">${i+1}</td>
+        <td><strong>${u.name}</strong></td>
+        <td style="color:#888">${u.email}</td>
+        <td style="color:#888">${u.phone||'—'}</td>
+        <td style="color:#888">${u.city||'—'}</td>
+        <td><span class="badge ${badge}">${label}</span></td>
+        <td>${action}</td>
+      </tr>`;
+    }).join('');
+  }catch(e){
+    document.getElementById('usersTb').innerHTML=
+      '<tr><td colspan="7" style="text-align:center;padding:24px;color:#ff6b6b">⚠️ Database error. XAMPP chal raha hai?</td></tr>';
+    // Fallback stats
+    document.getElementById('sUsers').textContent='—';
+    document.getElementById('sTrade').textContent='—';
+    document.getElementById('sBook').textContent='—';
+    document.getElementById('sRev').textContent='—';
+  }
+}
+
+async function deleteUser(id, btn){
+  if(!confirm('Is user ko delete karna chahte ho?')) return;
+  const fd = new FormData();
+  fd.append('id', id);
+  const res  = await fetch('api/delete_user.php',{method:'POST',body:fd});
+  const json = await res.json();
+  if(json.ok){
+    btn.closest('tr').remove();
+    loadUsers(); // stats refresh
+  } else {
+    alert('Delete nahi hua!');
+  }
+}
+
+async function loadBookings(){
+  try{
+    const res  = await fetch('api/get_all_bookings.php');
+    const json = await res.json();
+    const rows = json.bookings || [];
+    const tb   = document.getElementById('bookingsTb');
+    if(!rows.length){
+      tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted)">No bookings found.</td></tr>';
+      return;
+    }
+    const bmap={pending:'badge-pending',accepted:'badge-accepted',completed:'badge-completed',cancelled:'badge-cancelled'};
+    tb.innerHTML = rows.map((b,i)=>{
+      const d   = new Date(b.booking_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+      const amt = 'Rs. '+parseFloat(b.total_amount).toLocaleString();
+      const lbl = b.status.charAt(0).toUpperCase()+b.status.slice(1);
+      const act = b.status==='pending'||b.status==='accepted'
+        ? `<button class="btn-sm btn-reject" onclick="cancelBooking(${b.id})">Cancel</button>`
+        : '—';
+      return `<tr>
+        <td style="color:var(--muted)">${i+1}</td>
+        <td><strong>${b.client_name}</strong></td>
+        <td>${b.tradesman_name}</td>
+        <td>${b.service_type}</td>
+        <td>${d}</td>
+        <td style="color:var(--green);font-weight:700">${amt}</td>
+        <td><span class="badge ${bmap[b.status]||'badge-pending'}">${lbl}</span></td>
+        <td>${act}</td>
+      </tr>`;
+    }).join('');
+  }catch(e){
+    document.getElementById('bookingsTb').innerHTML=
+      '<tr><td colspan="8" style="text-align:center;padding:24px;color:#ff6b6b">⚠️ Database error.</td></tr>';
+  }
+}
+
+async function cancelBooking(id){
+  if(!confirm('Cancel this booking?')) return;
+  const fd=new FormData();
+  fd.append('booking_id',id);
+  fd.append('status','cancelled');
+  await fetch('api/update_booking.php',{method:'POST',body:fd});
+  loadBookings();
+  loadUsers();
+}
+
+function showTab(tab, clickedEl){
+  // Hide all tabs
+  ['dashboard','users','bookings','tradesmen'].forEach(t=>{
+    const el = document.getElementById('tab-'+t);
+    if(el) el.style.display = 'none';
+  });
+  // Show selected tab
+  const active = document.getElementById('tab-'+tab);
+  if(active) active.style.display = 'block';
+  // Update active sidebar link
+  document.querySelectorAll('.sidebar-nav a').forEach(a=>a.classList.remove('active'));
+  if(clickedEl) clickedEl.classList.add('active');
+  // Load data for that tab
+  if(tab==='users')     loadUsers();
+  if(tab==='bookings')  loadBookings();
+  if(tab==='tradesmen') loadTradesmen();
+  if(tab==='dashboard'){ loadUsers(); loadGraphs(); }
+}
+
+// Page load — show dashboard by default
+// Chart defaults
+Chart.defaults.color = '#555';
+Chart.defaults.borderColor = '#1a1a1a';
+let chartInstances = {};
+
+// Fix chart resize on zoom/window resize
+window.addEventListener('resize', ()=>{
+  Object.values(chartInstances).forEach(c=>{ try{ c.resize(); }catch(e){} });
+});
+
+async function loadGraphs(){
+  try{
+    const res  = await fetch('api/get_stats.php');
+    const json = await res.json();
+    if(!json.ok) return;
+
+    const green  = '#3bcc6e';
+    const colors = ['#3bcc6e','#f5a623','#5ba3f5','#b07fff','#ff6b6b'];
+
+    // Destroy old charts
+    Object.values(chartInstances).forEach(c=>c.destroy());
+    chartInstances = {};
+
+    // 1. Donut — Bookings by Status
+    const statusLabels = Object.keys(json.byStatus);
+    const statusData   = Object.values(json.byStatus);
+    chartInstances.status = new Chart(document.getElementById('chartStatus'),{
+      type:'doughnut',
+      data:{
+        labels: statusLabels.map(l=>l.charAt(0).toUpperCase()+l.slice(1)),
+        datasets:[{data:statusData, backgroundColor:colors, borderWidth:0, hoverOffset:4}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:11}}}},cutout:'65%'}
+    });
+
+    // 2. Bar — Bookings by Service
+    const svcLabels = Object.keys(json.byService).map(l=>l.charAt(0).toUpperCase()+l.slice(1));
+    const svcData   = Object.values(json.byService);
+    chartInstances.service = new Chart(document.getElementById('chartService'),{
+      type:'bar',
+      data:{
+        labels: svcLabels,
+        datasets:[{label:'Bookings', data:svcData, backgroundColor:green, borderRadius:6, borderSkipped:false}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}}, y:{beginAtZero:true, ticks:{stepSize:1}}}}
+    });
+
+    // 3. Line — Revenue by Month
+    const revLabels = json.revMonth.map(r=>r.month);
+    const revData   = json.revMonth.map(r=>r.rev);
+    chartInstances.revenue = new Chart(document.getElementById('chartRevenue'),{
+      type:'line',
+      data:{
+        labels: revLabels.length ? revLabels : ['No data'],
+        datasets:[{
+          label:'Revenue (Rs.)', data:revData.length ? revData : [0],
+          borderColor:green, backgroundColor:'rgba(59,204,110,.1)',
+          fill:true, tension:.4, pointBackgroundColor:green, pointRadius:5
+        }]
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}}, y:{beginAtZero:true}}}
+    });
+
+    // 4. Pie — Users by Role
+    const roleLabels = Object.keys(json.byRole).map(l=>l.charAt(0).toUpperCase()+l.slice(1));
+    const roleData   = Object.values(json.byRole);
+    chartInstances.users = new Chart(document.getElementById('chartUsers'),{
+      type:'pie',
+      data:{
+        labels: roleLabels,
+        datasets:[{data:roleData, backgroundColor:['#3bcc6e','#5ba3f5','#b07fff'], borderWidth:0}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:11}}}}}
+    });
+
+    // 5. Top Tradesmen bar list
+    const topEl = document.getElementById('topTradesmen');
+    if(json.byService && Object.keys(json.byService).length){
+      // Fetch from tradesmen list
+      const tr = await fetch('api/get_tradesmen.php');
+      const tj = await tr.json();
+      const sorted = (tj.tradesmen||[]).sort((a,b)=>b.total_jobs-a.total_jobs).slice(0,5);
+      const maxJobs = sorted[0]?.total_jobs || 1;
+      topEl.innerHTML = sorted.map(t=>`
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:36px;height:36px;border-radius:8px;background:#0d1f14;border:1px solid #1a3a24;display:flex;align-items:center;justify-content:center;font-weight:800;color:#3bcc6e;font-size:.82rem;flex-shrink:0;">${t.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}</div>
+          <div style="flex:1;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+              <span style="color:#fff;font-weight:600;font-size:.88rem;">${t.name}</span>
+              <span style="color:#3bcc6e;font-weight:700;font-size:.82rem;">${t.total_jobs} jobs</span>
+            </div>
+            <div style="background:#1a1a1a;border-radius:20px;height:6px;overflow:hidden;">
+              <div style="background:#3bcc6e;height:100%;border-radius:20px;width:${Math.round((t.total_jobs/maxJobs)*100)}%;transition:width .6s;"></div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      topEl.innerHTML = '<p style="color:#444;font-size:.88rem;">No data yet.</p>';
+    }
+
+  }catch(e){ console.error('Graph error:',e); }
+}
+
+loadUsers();
+loadBookings();
+loadGraphs();
+</script>
+</body></html>

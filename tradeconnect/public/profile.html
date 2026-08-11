@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tradesman Profile — TradeConnect</title>
+<link rel="stylesheet" href="common.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+.page{max-width:1000px;margin:36px auto;padding:0 20px;display:grid;grid-template-columns:340px 1fr;gap:24px;}
+@media(max-width:768px){.page{grid-template-columns:1fr;}}
+
+/* LEFT SIDEBAR */
+.profile-card{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:18px;overflow:hidden;}
+.profile-head{background:linear-gradient(135deg,#0a0a0a,#111);padding:36px 24px;text-align:center;border-bottom:1px solid #1e1e1e;}
+.big-avatar{width:88px;height:88px;border-radius:18px;background:#0d1f14;border:2px solid #1a3a24;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;color:#3bcc6e;margin:0 auto 16px;}
+.profile-head h2{font-weight:800;font-size:1.4rem;color:#fff;margin-bottom:8px;}
+.trade-tag{background:#0d1f14;color:#3bcc6e;border:1px solid #1a3a24;padding:5px 14px;border-radius:20px;font-size:.8rem;font-weight:700;display:inline-block;margin-bottom:10px;}
+.avail-dot{font-size:.82rem;margin-top:6px;}
+.avail-dot.on{color:#3bcc6e;} .avail-dot.off{color:#ff6b6b;}
+.stars-big{color:#f5a623;font-size:1.1rem;}
+.rating-num{font-size:1.3rem;font-weight:800;color:#fff;margin-left:6px;}
+
+.info-list{padding:20px 24px;}
+.info-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #1a1a1a;font-size:.88rem;}
+.info-item:last-child{border:none;}
+.info-item i{color:#3bcc6e;width:18px;text-align:center;flex-shrink:0;}
+.info-item .lbl{color:#555;font-size:.78rem;display:block;margin-bottom:2px;}
+.info-item .val{color:#fff;font-weight:600;}
+
+.btn-book-big{display:block;background:#3bcc6e;color:#000;text-align:center;padding:14px;border-radius:10px;font-weight:800;font-size:1rem;text-decoration:none;margin:0 24px 24px;transition:.2s;}
+.btn-book-big:hover{background:#2aaa58;}
+
+/* RIGHT CONTENT */
+.section-box{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:16px;padding:24px;margin-bottom:20px;}
+.section-box h3{font-weight:700;font-size:1rem;color:#fff;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;gap:8px;}
+.section-box h3 i{color:#3bcc6e;}
+.bio-text{color:#888;font-size:.9rem;line-height:1.75;}
+
+/* STATS ROW */
+.stats-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.stat-mini{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:12px;padding:16px;text-align:center;}
+.stat-mini h4{font-size:1.6rem;font-weight:800;color:#fff;margin:0 0 4px;}
+.stat-mini p{color:#555;font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;margin:0;}
+
+/* REVIEWS */
+.review-item{padding:16px 0;border-bottom:1px solid #1a1a1a;}
+.review-item:last-child{border:none;}
+.review-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.reviewer-name{font-weight:700;color:#fff;font-size:.9rem;}
+.review-stars{color:#f5a623;font-size:.85rem;}
+.review-date{color:#444;font-size:.75rem;margin-top:2px;}
+.review-comment{color:#888;font-size:.87rem;line-height:1.65;margin-top:6px;}
+.no-reviews{text-align:center;padding:32px;color:#444;}
+.no-reviews i{font-size:2rem;display:block;margin-bottom:10px;}
+
+/* VERIFIED BADGE */
+.verified-big{background:#0d1f14;color:#3bcc6e;border:1px solid #1a3a24;padding:4px 12px;border-radius:6px;font-size:.75rem;font-weight:700;display:inline-flex;align-items:center;gap:5px;margin-top:8px;}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M3 3L25 25" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><path d="M25 3L3 25" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><circle cx="3" cy="3" r="2.5" fill="#3bcc6e"/><circle cx="25" cy="3" r="2.5" fill="#3bcc6e"/><circle cx="3" cy="25" r="2.5" fill="#3bcc6e"/><circle cx="25" cy="25" r="2.5" fill="#3bcc6e"/></svg>
+    <span style="font-size:1.2rem;font-weight:800;color:#fff;">Trade <span style="color:#3bcc6e;">Connect</span></span>
+  </a>
+  <a href="search.html" style="color:#555;font-size:.88rem;text-decoration:none;"><i class="fas fa-arrow-left" style="margin-right:6px"></i>Back to Search</a>
+</nav>
+
+<div class="page" id="pageContent" style="display:none;">
+  <!-- LEFT -->
+  <div>
+    <div class="profile-card">
+      <div class="profile-head">
+        <div class="big-avatar" id="pAvatar">?</div>
+        <h2 id="pName">Loading...</h2>
+        <span class="trade-tag" id="pTrade">—</span>
+        <div id="pVerified"></div>
+        <div style="margin-top:12px;">
+          <span class="stars-big" id="pStars">★★★★★</span>
+          <span class="rating-num" id="pRating">0.0</span>
+          <span style="color:#555;font-size:.8rem" id="pReviewCount">(0 reviews)</span>
+        </div>
+        <div class="avail-dot" id="pAvail">● Available</div>
+      </div>
+      <div class="info-list">
+        <div class="info-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <div><span class="lbl">City</span><span class="val" id="pCity">—</span></div>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-clock"></i>
+          <div><span class="lbl">Experience</span><span class="val" id="pExp">—</span></div>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-money-bill"></i>
+          <div><span class="lbl">Hourly Rate</span><span class="val" id="pRate" style="color:#3bcc6e;">—</span></div>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-briefcase"></i>
+          <div><span class="lbl">Jobs Completed</span><span class="val" id="pJobs">—</span></div>
+        </div>
+      </div>
+      <a href="#" class="btn-book-big" id="pBookBtn"><i class="fas fa-calendar-check" style="margin-right:8px"></i>Book Now</a>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div>
+    <!-- Stats -->
+    <div class="stats-mini">
+      <div class="stat-mini"><h4 id="sTotalJobs">0</h4><p>Total Jobs</p></div>
+      <div class="stat-mini"><h4 id="sRating">0.0</h4><p>Rating</p></div>
+      <div class="stat-mini"><h4 id="sExp">0</h4><p>Years Exp</p></div>
+    </div>
+
+    <!-- Bio -->
+    <div class="section-box">
+      <h3><i class="fas fa-user"></i> About</h3>
+      <p class="bio-text" id="pBio">—</p>
+    </div>
+
+    <!-- Reviews -->
+    <div class="section-box">
+      <h3><i class="fas fa-star"></i> Client Reviews <span id="reviewCountBadge" style="background:#0d1f14;color:#3bcc6e;border:1px solid #1a3a24;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700;margin-left:6px;">0</span></h3>
+      <div id="reviewsList">
+        <div class="no-reviews"><i class="fas fa-star"></i><p>No reviews yet.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading -->
+<div id="loadingDiv" style="text-align:center;padding:80px;color:#555;">
+  <i class="fas fa-spinner fa-spin" style="font-size:2rem;display:block;margin-bottom:16px;color:#3bcc6e;"></i>
+  Loading profile...
+</div>
+
+<script>
+const labels={plumber:"🔧 Plumber",electrician:"⚡ Electrician",carpenter:"🪚 Carpenter",painter:"🎨 Painter",other:"🔨 Other"};
+
+function starsHtml(r){
+  r=parseFloat(r||0);
+  return r>=5?'★★★★★':r>=4.5?'★★★★½':r>=4?'★★★★☆':r>=3?'★★★☆☆':'★★☆☆☆';
+}
+
+function getInitials(name){
+  return name.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+}
+
+async function loadProfile(){
+  const p   = new URLSearchParams(location.search);
+  const tid = parseInt(p.get('id'))||0;
+  if(!tid){ document.getElementById('loadingDiv').innerHTML='<p style="color:#ff6b6b">Invalid profile ID!</p>'; return; }
+
+  try{
+    const res  = await fetch('api/get_tradesman_profile.php?id='+tid);
+    const json = await res.json();
+
+    if(!json.ok || !json.tradesman){
+      document.getElementById('loadingDiv').innerHTML='<p style="color:#ff6b6b">Profile not found!</p>';
+      return;
+    }
+
+    const t = json.tradesman;
+    const reviews = json.reviews || [];
+
+    // Set title
+    document.title = t.name + ' — TradeConnect';
+
+    // Left card
+    document.getElementById('pAvatar').textContent = getInitials(t.name);
+    document.getElementById('pName').textContent   = t.name;
+    document.getElementById('pTrade').textContent  = labels[t.trade_category]||t.trade_category;
+    document.getElementById('pStars').textContent  = starsHtml(t.rating_avg);
+    document.getElementById('pRating').textContent = parseFloat(t.rating_avg||0).toFixed(1);
+    document.getElementById('pReviewCount').textContent = '('+reviews.length+' reviews)';
+    document.getElementById('pCity').textContent   = t.city||'—';
+    document.getElementById('pExp').textContent    = (t.experience_years||0)+' years';
+    document.getElementById('pRate').textContent   = 'Rs. '+parseFloat(t.hourly_rate).toLocaleString()+'/hr';
+    document.getElementById('pJobs').textContent   = (t.total_jobs||0)+'+ jobs';
+    document.getElementById('pBookBtn').href       = 'booking.html?id='+t.id;
+
+    // Verified
+    if(t.is_verified==1){
+      document.getElementById('pVerified').innerHTML='<span class="verified-big"><i class="fas fa-check"></i> Verified Tradesman</span>';
+    }
+
+    // Availability
+    const avEl = document.getElementById('pAvail');
+    if(t.is_available==1){ avEl.textContent='● Available Now'; avEl.className='avail-dot on'; }
+    else{ avEl.textContent='● Currently Busy'; avEl.className='avail-dot off'; }
+
+    // Stats
+    document.getElementById('sTotalJobs').textContent = t.total_jobs||0;
+    document.getElementById('sRating').textContent    = parseFloat(t.rating_avg||0).toFixed(1)+'★';
+    document.getElementById('sExp').textContent       = t.experience_years||0;
+
+    // Bio
+    document.getElementById('pBio').textContent = t.bio || 'No bio provided yet.';
+
+    // Reviews
+    document.getElementById('reviewCountBadge').textContent = reviews.length;
+    const rList = document.getElementById('reviewsList');
+    if(!reviews.length){
+      rList.innerHTML='<div class="no-reviews"><i class="fas fa-star"></i><p>No reviews yet. Be the first to review!</p></div>';
+    } else {
+      rList.innerHTML = reviews.map(r=>{
+        const d = new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+        const stars = '★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
+        return `<div class="review-item">
+          <div class="review-header">
+            <div>
+              <div class="reviewer-name">${r.client_name}</div>
+              <div class="review-date">${d}</div>
+            </div>
+            <span class="review-stars">${stars} ${r.rating}/5</span>
+          </div>
+          ${r.comment?`<div class="review-comment">"${r.comment}"</div>`:''}
+        </div>`;
+      }).join('');
+    }
+
+    // Show page
+    document.getElementById('loadingDiv').style.display='none';
+    document.getElementById('pageContent').style.display='grid';
+
+  }catch(e){
+    document.getElementById('loadingDiv').innerHTML='<p style="color:#ff6b6b">⚠️ Error loading profile. XAMPP chal raha hai?</p>';
+  }
+}
+
+loadProfile();
+</script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Edit Profile — TradeConnect</title>
+<link rel="stylesheet" href="common.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{display:flex;flex-direction:column;min-height:100vh;}
+.page{max-width:700px;margin:40px auto;padding:0 20px;width:100%;}
+.card{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:18px;padding:36px;}
+.card h2{font-weight:800;font-size:1.5rem;color:#fff;margin-bottom:6px;}
+.card .sub{color:#555;font-size:.88rem;margin-bottom:28px;}
+
+/* Photo upload area */
+.photo-section{text-align:center;margin-bottom:32px;padding-bottom:28px;border-bottom:1px solid #1a1a1a;}
+.photo-wrap{position:relative;display:inline-block;margin-bottom:16px;}
+.photo-circle{
+  width:110px;height:110px;border-radius:50%;
+  background:#0d1f14;border:3px solid #1a3a24;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;font-weight:800;color:#3bcc6e;
+  overflow:hidden;cursor:pointer;transition:.2s;
+  margin:0 auto;position:relative;
+}
+.photo-circle img{width:100%;height:100%;object-fit:cover;}
+.photo-circle:hover{border-color:#3bcc6e;}
+.photo-overlay{
+  position:absolute;inset:0;background:rgba(0,0,0,.6);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:.2s;border-radius:50%;
+  font-size:.8rem;color:#fff;flex-direction:column;gap:4px;
+}
+.photo-circle:hover .photo-overlay{opacity:1;}
+.photo-overlay i{font-size:1.2rem;}
+#photoInput{display:none;}
+.photo-name{color:#fff;font-weight:700;font-size:1rem;margin-bottom:4px;}
+.photo-role{color:#3bcc6e;font-size:.82rem;}
+.photo-hint{color:#444;font-size:.78rem;margin-top:8px;}
+
+/* Form */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+.section-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#444;margin:20px 0 14px;padding-bottom:8px;border-bottom:1px solid #1a1a1a;}
+.btn-save{background:#3bcc6e;color:#000;border:none;padding:14px 36px;border-radius:10px;font-weight:700;font-size:.95rem;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;}
+.btn-save:hover{background:#2aaa58;}
+.btn-back{background:transparent;border:1px solid #222;color:#aaa;padding:14px 24px;border-radius:10px;font-weight:600;font-size:.88rem;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:none;display:inline-block;transition:.2s;}
+.btn-back:hover{border-color:#444;color:#fff;}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><path d="M3 3L25 25" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><path d="M25 3L3 25" stroke="#3bcc6e" stroke-width="3.5" stroke-linecap="round"/><circle cx="3" cy="3" r="2.5" fill="#3bcc6e"/><circle cx="25" cy="3" r="2.5" fill="#3bcc6e"/><circle cx="3" cy="25" r="2.5" fill="#3bcc6e"/><circle cx="25" cy="25" r="2.5" fill="#3bcc6e"/></svg>
+    <span style="font-size:1.2rem;font-weight:800;color:#fff;">Trade <span style="color:#3bcc6e;">Connect</span></span>
+  </a>
+  <a href="javascript:history.back()" style="color:#555;font-size:.88rem;text-decoration:none;"><i class="fas fa-arrow-left" style="margin-right:6px"></i>Back</a>
+</nav>
+
+<div class="page">
+  <div class="card">
+    <h2>Edit Profile</h2>
+    <p class="sub">Update your profile information and photo</p>
+
+    <div class="alert alert-error" id="errBox" style="display:none;margin-bottom:16px;"></div>
+    <div class="alert alert-success" id="sucBox" style="display:none;margin-bottom:16px;"></div>
+
+    <!-- PHOTO SECTION -->
+    <div class="photo-section">
+      <div class="photo-wrap">
+        <div class="photo-circle" onclick="document.getElementById('photoInput').click()">
+          <div id="photoDisplay">?</div>
+          <div class="photo-overlay"><i class="fas fa-camera"></i>Change</div>
+        </div>
+      </div>
+      <div class="photo-name" id="profileName">Loading...</div>
+      <div class="photo-role" id="profileRole">—</div>
+      <div class="photo-hint">Click on photo to upload • JPG, PNG • Max 2MB</div>
+      <input type="file" id="photoInput" accept="image/*" onchange="uploadPhoto(this)">
+    </div>
+
+    <!-- PROFILE FORM -->
+    <form onsubmit="saveProfile(event)">
+      <div class="section-label">Personal Information</div>
+      <div class="two-col">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="fname" placeholder="Your full name" required>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="fphone" placeholder="03XX-XXXXXXX">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>City</label>
+        <select id="fcity">
+          <option value="">Select City</option>
+          <option>Karachi</option><option>Lahore</option><option>Islamabad</option>
+          <option>Rawalpindi</option><option>Faisalabad</option><option>Multan</option>
+          <option>Hyderabad</option><option>Peshawar</option><option>Quetta</option>
+        </select>
+      </div>
+
+      <!-- Tradesman fields -->
+      <div id="tradesmanFields" style="display:none;">
+        <div class="section-label">Tradesman Details</div>
+        <div class="two-col">
+          <div class="form-group">
+            <label>Hourly Rate (Rs.)</label>
+            <input type="number" id="frate" placeholder="e.g. 500" min="0">
+          </div>
+          <div class="form-group">
+            <label>Experience (Years)</label>
+            <input type="number" id="fexp" placeholder="e.g. 5" min="0">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Bio</label>
+          <textarea id="fbio" rows="3" placeholder="Tell clients about your skills..."></textarea>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;">
+        <button type="submit" class="btn-save"><i class="fas fa-save" style="margin-right:8px"></i>Save Changes</button>
+        <a href="javascript:history.back()" class="btn-back">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+let userRole = '';
+
+async function loadProfile(){
+  const res  = await fetch('api/get_session.php');
+  const json = await res.json();
+  if(!json.ok){ window.location.href='login.html'; return; }
+
+  const u = json.user;
+  const p = json.profile;
+  userRole = u.role;
+
+  // Photo
+  const initials = u.name.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const pd = document.getElementById('photoDisplay');
+  if(u.profile_image){
+    pd.innerHTML = `<img src="${u.profile_image}" alt="Profile">`;
+  } else {
+    pd.textContent = initials;
+  }
+
+  document.getElementById('profileName').textContent = u.name;
+  document.getElementById('profileRole').textContent = u.role.charAt(0).toUpperCase()+u.role.slice(1);
+
+  // Fill form
+  document.getElementById('fname').value  = u.name  || '';
+  document.getElementById('fphone').value = u.phone || '';
+  document.getElementById('fcity').value  = u.city  || '';
+
+  // Tradesman fields
+  if(u.role === 'tradesman' && p){
+    document.getElementById('tradesmanFields').style.display='block';
+    document.getElementById('frate').value = p.hourly_rate     || '';
+    document.getElementById('fexp').value  = p.experience_years|| '';
+    document.getElementById('fbio').value  = p.bio             || '';
+  }
+}
+
+async function uploadPhoto(input){
+  const file = input.files[0];
+  if(!file) return;
+
+  const fd = new FormData();
+  fd.append('photo', file);
+
+  showMsg('Uploading...', 'success');
+  const res  = await fetch('api/upload_photo.php', {method:'POST', body:fd});
+  const json = await res.json();
+
+  if(json.ok){
+    // Show new photo
+    const pd = document.getElementById('photoDisplay');
+    pd.innerHTML = `<img src="${json.path}?t=${Date.now()}" alt="Profile">`;
+    showMsg('✅ Photo updated successfully!', 'success');
+  } else {
+    showMsg('❌ '+json.msg, 'error');
+  }
+}
+
+async function saveProfile(e){
+  e.preventDefault();
+  const fd = new FormData();
+  fd.append('name',  document.getElementById('fname').value);
+  fd.append('phone', document.getElementById('fphone').value);
+  fd.append('city',  document.getElementById('fcity').value);
+  if(userRole === 'tradesman'){
+    fd.append('hourly_rate',      document.getElementById('frate').value);
+    fd.append('experience_years', document.getElementById('fexp').value);
+    fd.append('bio',              document.getElementById('fbio').value);
+  }
+
+  const res  = await fetch('api/update_profile.php', {method:'POST', body:fd});
+  const json = await res.json();
+
+  if(json.ok){
+    showMsg('✅ Profile updated successfully!', 'success');
+    document.getElementById('profileName').textContent = document.getElementById('fname').value;
+    setTimeout(()=>history.back(), 1500);
+  } else {
+    showMsg('❌ '+(json.msg||'Update failed'), 'error');
+  }
+}
+
+function showMsg(msg, type){
+  const box = document.getElementById(type==='error'?'errBox':'sucBox');
+  const other= document.getElementById(type==='error'?'sucBox':'errBox');
+  box.textContent = msg;
+  box.style.display='block';
+  other.style.display='none';
+}
+
+loadProfile();
+</script>
+</body>
+</html>
