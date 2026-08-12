@@ -2,7 +2,7 @@ FROM php:8.2-apache
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-COPY public/ /var/www/html/
+COPY tradeconnect/ /var/www/html/
 
 RUN chown -R www-data:www-data /var/www/html
 
