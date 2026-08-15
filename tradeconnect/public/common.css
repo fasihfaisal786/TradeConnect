@@ -4,7 +4,6 @@
   .nav-links{gap:2px;}
   .nav-links a:not(.btn-ghost):not(.btn-green){display:none;}
 }
-
 /* ─── DASHBOARD / SIDEBAR — becomes horizontal top bar instead of vanishing ─── */
 @media(max-width:700px){
   .dash-wrap{flex-direction:column;}
@@ -13,8 +12,12 @@
     flex-direction:row;
     align-items:center;
     width:100%;
+    height:auto;
     min-height:auto;
+    position:relative;
+    top:auto;
     overflow-x:auto;
+    overflow-y:hidden;
     -webkit-overflow-scrolling:touch;
     border-right:none;
     border-bottom:1px solid var(--border);
@@ -33,7 +36,6 @@
   }
   .sidebar-nav a:hover,.sidebar-nav a.active{border-left-color:transparent;border-bottom-color:var(--green);background:rgba(59,204,110,.08);}
   .sidebar-section,.sidebar-footer{display:none;}
-
   .dash-main{padding:16px;}
   .topbar{flex-direction:column;align-items:flex-start;gap:10px;}
   .stats-row{grid-template-columns:1fr 1fr;gap:10px;}
@@ -41,11 +43,9 @@
   .stat-card h3{font-size:1.4rem;}
   .card{padding:18px;}
   table{min-width:520px;}
-
   /* Prevent iOS auto-zoom on form focus */
   input:not([type=radio]):not([type=checkbox]),select,textarea{font-size:16px;}
 }
-
 /* ─── SMALL PHONES ─── */
 @media(max-width:480px){
   .stats-row{grid-template-columns:1fr;}
