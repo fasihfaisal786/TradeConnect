@@ -444,7 +444,18 @@ async function loadGraphs(){
 
   }catch(e){ console.error('Graph error:',e); }
 }
-
+async function checkAdminSession(){
+  try{
+    const res  = await fetch('api/get_session.php');
+    const json = await res.json();
+    if(!json.ok || json.user.role !== 'admin'){
+      window.location.href='login.html';
+    }
+  }catch(e){
+    window.location.href='login.html';
+  }
+}
+checkAdminSession();
 loadUsers();
 loadBookings();
 loadGraphs();
