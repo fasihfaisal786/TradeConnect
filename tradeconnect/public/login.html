@@ -22,6 +22,12 @@ body{display:flex;flex-direction:column;min-height:100vh;}
 .demo-btn:hover{background:#142d1c;border-color:#3bcc6e;}
 .reg-link{text-align:center;font-size:.88rem;color:var(--muted);}
 .reg-link a{color:var(--green);font-weight:600;}
+@media(max-width:480px){
+  .box{padding:28px 20px;}
+  .box h2{font-size:1.6rem;}
+  .demo-wrap > div{flex-wrap:wrap!important;gap:6px!important;}
+  .demo-btn{flex:1 1 30%;justify-content:center;padding:8px 6px;font-size:.72rem;}
+}
 </style>
 </head><body>
 <nav class="navbar">
