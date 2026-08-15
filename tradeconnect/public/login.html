@@ -62,5 +62,6 @@ function fill(e,p){document.getElementById('emailF').value=e;document.getElement
 const p=new URLSearchParams(location.search);
 if(p.get('error')){document.getElementById('alertTxt').textContent=decodeURIComponent(p.get('error').replace(/\+/g,' '));document.getElementById('alertBox').classList.add('show');}
 if(p.get('registered')){document.getElementById('successBox').classList.add('show');document.getElementById('successBox').innerHTML='<i class="fas fa-check-circle" style="margin-right:8px"></i>Account created successfully! Please login.'}
+if(p.get('loggedout')){document.getElementById('successBox').classList.add('show');document.getElementById('successBox').innerHTML='<i class="fas fa-check-circle" style="margin-right:8px"></i>You have been logged out successfully.'}
 </script>
 </body></html>
